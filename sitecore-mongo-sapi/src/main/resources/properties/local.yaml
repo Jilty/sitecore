@@ -1,0 +1,23 @@
+mongodb:
+ connectionString: "mongodb+srv://admin:admin@cluster0.1rswu.mongodb.net/Sitecore?retryWrites=true&w=majority"
+ 
+http:
+ protocol: "HTTP"
+ host: "0.0.0.0"
+ port: "8081" 
+ 
+router:
+ definition: "SiteCore Mongo SAPI"
+ header: "outboundHeadersMapName"
+ status: "httpStatus"
+ 
+application:
+  name: "SiteCore Mongo SAPI "  
+  version: "1.0" 
+  instanceName: "sapi" 
+  env: "local"
+  status: "active"  
+ 
+
+
+ 

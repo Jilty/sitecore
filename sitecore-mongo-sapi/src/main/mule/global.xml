@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="d608bb84-3244-45b9-9c03-781d8915ed05" file="properties/${env}.yaml" />
+	<global-property doc:name="Global Property" doc:id="a99d485c-6505-44e7-85a0-3d13c5eaad26" name="env" value="local" />
+	<mongo:config name="mongodb-config" doc:name="MongoDB Config" doc:id="0049ae4d-60a3-4699-ab0c-8739bfbc7d02" >
+		<mongo:connection-string-connection connectionString="${mongodb.connectionString}" />
+	</mongo:config>
+	<http:listener-config name="http-listener-config" doc:name="HTTP Listener config" doc:id="40dc98a4-0e88-4979-9bcd-bd3ceabd639e" >
+		<http:listener-connection host="${http.host}" port="${http.port}" />
+	</http:listener-config>
+	<apikit:config outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" doc:name="Router" doc:id="9f180178-d7da-47bf-8f24-a553859107f4" name="sitecore-mongo-sapi-config" api="resource::5c4f07af-8f57-4104-a9ae-2779234b4592:sitecore-mongo-sapi:1.0.2:raml:zip:sitecore-mongo-sapi.raml"/>
+	
+</mule>

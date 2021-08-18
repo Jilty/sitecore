@@ -1,0 +1,1310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:s3="http://www.mulesoft.org/schema/mule/s3"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+	<flow name="api-health-check" doc:id="8f8185b1-3130-49ea-8e4c-f5ca9fecc945" >
+		<ee:transform doc:name="Transform Message" doc:id="5e30faab-79a2-4e35-8a77-14d716cb1c53" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+"application_name":p("application_name"),
+"application_version":p("application_version"),
+"api_name":p("application_instanceName"),
+"environment":p('mule-env'),
+"status":p("application.status")
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="get-and-publish-assets" doc:id="92bb15c3-a2ec-40ac-9506-2b7a4cbabb0c" >
+		<ee:transform doc:name="Response To  Json" doc:id="ea08ea8d-7c5a-4149-a0ca-eed68305ed58" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{"items":[{
+            "id": 466848,
+            "identifier": "076VdhFqJUCEc3VX4e_v8Q",
+            "cultures": [
+                "en-US"
+            ],
+            "properties": {
+                "FileName": "6250472_TasteSummer2018-FANATIC-MaxMiechowski-286.jpg",
+                "Title": "Test Asset _5",
+                "Description": {
+                    "en-US": "Test Assets 01062021"
+                },
+                "Keywords": "Test, Asset",
+                "OccasionOrSeason": null,
+                "Language": [
+                    {
+                        "identifier": "en",
+                        "labels": {
+                            "en-US": "English"
+                        }
+                    }
+                ],
+                "Comments": "This asset is for testing purposes. Do not delete.",
+                "MIMEType": "image/jpeg",
+                "UsageSummary": null,
+                "UsageURL": null,
+                "PublicationDate": null,
+                "SmartBrandLegacyAssetID": null,
+                "SmartApproveLegacyProjectID": null,
+                "MigratedSmartBrandData": null,
+                "SmartbrandLegacyTaxonomyData": null,
+                "SmartbrandLegacyLightboxes": null,
+                "UsageRightsType": {
+                    "identifier": "Unrestricted Use",
+                    "labels": {
+                        "en-US": "Guinness Archive Classification - Subject to DMC/IP Legal Approval"
+                    }
+                },
+                "CostofRenegotiation": null,
+                "ApprovedBy": "Brett.Lewis@diageo.com",
+                "ApprovalDate": "2021-06-01T07:55:42.339Z"
+            },
+            "relations": {
+                "CategoryToAsset": {
+                    "parents": [
+                        {
+                            "properties": {
+                                "TaxonomyLabel": {
+                                    "en-US": "Diageo"
+                                },
+                                "LevelIdentifier": "Z01000"
+                            },
+                            "href": "https://31-qa.diageocontenthub.com/api/entities/20477"
+                        }
+                    ],
+                    "inherits_security": true,
+                    "self": {
+                        "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/relations/CategoryToAsset"
+                    }
+                },
+                "AssetTypeToAsset": {
+                    "parent": {
+                        "properties": {
+                            "Label": {
+                                "en-US": "Photography"
+                            }
+                        },
+                        "href": "https://31-qa.diageocontenthub.com/api/entities/4571034"
+                    },
+                    "inherits_security": true,
+                    "self": {
+                        "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/relations/AssetTypeToAsset"
+                    }
+                },
+                "CreatedForMarketToAsset": {
+                    "parents": [
+                        {
+                            "properties": {
+                                "TaxonomyLabel": {
+                                    "en-US": "GB"
+                                }
+                            },
+                            "href": "https://31-qa.diageocontenthub.com/api/entities/21062"
+                        },
+                        {
+                            "properties": {
+                                "TaxonomyLabel": {
+                                    "en-US": "IOI"
+                                }
+                            },
+                            "href": "https://31-qa.diageocontenthub.com/api/entities/4591625"
+                        },
+                        {
+                            "properties": {
+                                "TaxonomyLabel": {
+                                    "en-US": "Ireland"
+                                }
+                            },
+                            "href": "https://31-qa.diageocontenthub.com/api/entities/21059"
+                        },
+                        {
+                            "properties": {
+                                "TaxonomyLabel": {
+                                    "en-US": "Northern Ireland"
+                                }
+                            },
+                            "href": "https://31-qa.diageocontenthub.com/api/entities/2333181"
+                        }
+                    ],
+                    "inherits_security": true,
+                    "self": {
+                        "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/relations/CreatedForMarketToAsset"
+                    }
+                },
+                "TagToAsset": {
+                    "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/relations/TagToAsset"
+                },
+                "GalleryToAsset": {
+                    "parents": [],
+                    "inherits_security": true,
+                    "self": {
+                        "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/relations/GalleryToAsset"
+                    }
+                },
+                "ReportingSystemToAsset": {
+                    "parents": [],
+                    "inherits_security": true,
+                    "self": {
+                        "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/relations/ReportingSystemToAsset"
+                    }
+                },
+                "DRM_RightsProfile_RightsProfileToAsset": {
+                    "parents": [
+                        {
+                            "properties": {
+                                "DRM_RightsProfile_Name": "DCH Unrestricted",
+                                "DRM_RightsProfile_StartDate": "2018-06-01T07:02:35+01:00",
+                                "DRM_RightsProfile_CalculatedExpirationDate": null
+                            },
+                            "href": "https://31-qa.diageocontenthub.com/api/entities/1861637"
+                        },
+                        {
+                            "properties": {
+                                "DRM_RightsProfile_Name": "DCH Unrestricted",
+                                "DRM_RightsProfile_StartDate": "2018-06-01T07:02:35+01:00",
+                                "DRM_RightsProfile_CalculatedExpirationDate": "9999-12-31T23:59:59.9999999+00:00"
+                            },
+                            "href": "https://31-qa.diageocontenthub.com/api/entities/1861637"
+                        }
+                    ],
+                    "inherits_security": true,
+                    "self": {
+                        "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/relations/DRM.RightsProfile.RightsProfileToAsset"
+                    }
+                },
+                "RecipeToAsset": {
+                    "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/relations/RecipeToAsset"
+                },
+                "MasterFile": {
+                    "children": [
+                        {
+                            "href": "https://31-qa.diageocontenthub.com/api/entities/4668433"
+                        }
+                    ],
+                    "inherits_security": true,
+                    "self": {
+                        "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/relations/MasterFile"
+                    }
+                }
+            },
+            "created_by": {
+                "href": "https://31-qa.diageocontenthub.com/api/entities/120941",
+                "title": "The user who created the entity"
+            },
+            "created_on": "2021-06-01T07:49:51.004Z",
+            "modified_by": {
+                "href": "https://31-qa.diageocontenthub.com/api/entities/120941",
+                "title": "The user who last modified the entity"
+            },
+            "modified_on": "2021-07-08T08:05:19.577Z",
+            "entitydefinition": {
+                "href": "https://31-qa.diageocontenthub.com/api/entitydefinitions/M.Asset",
+                "title": "The entity definition for this entity"
+            },
+            "copy": {
+                "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/copy",
+                "title": "Copy this entity"
+            },
+            "permissions": {
+                "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/permissions",
+                "title": "The permissions on this entity"
+            },
+            "lifecycle": {
+                "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/lifecycle",
+                "title": "The lifecycle action for this entity."
+            },
+            "saved_selections": {
+                "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/savedselections",
+                "title": "The saved selections this entity belongs to"
+            },
+            "roles": {
+                "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/roles",
+                "title": "Roles for this entity"
+            },
+            "annotations": {
+                "href": "https://31-qa.diageocontenthub.com/api/entities/4668432/annotations",
+                "title": "Annotations for this entity"
+            },
+            "is_root_taxonomy_item": false,
+            "is_path_root": false,
+            "inherits_security": true,
+            "is_system_owned": false,
+            "version": 20,
+            "full": {
+                "href": "https://31-qa.diageocontenthub.com/api/entities/4668432"
+            },
+            "self": {
+                "href": "https://31-qa.diageocontenthub.com/api/entities/4668432?culture=en-US&members=_id%2CFileName%2CTitle%2CDescription%2CKeywords%2COccasionOrSeason%2CComments%2CLanguage%2CUsageSummary%2CUsageURL%2CPublicationDate%2CSmartBrandLegacyAssetID%2CSmartApproveLegacyProjectID%2CMigratedSmartBrandData%2CSmartbrandLegacyTaxonomyData%2CSmartbrandLegacyLightboxes%2CApprovedBy%2CApprovalDate%2CUsageRightsType%2COwnership%2CMoralRightsContactName%2CCostofRenegotiation%2CMoralRightsPreserved%2CMIMEType%2Ccreated_by%2Ccreated_on%2Cmodified_on%2Cmodified_by%2CCategoryToAsset%2CAssetTypeToAsset%2CGeographyToAsset%2CCreatedForMarketToAsset%2CTagToAsset%2CProductToAsset%2CRecipeToAsset%2CGalleryToAsset%2CReportingSystemToAsset%2CMasterFile%2CBottleProductGroupToAsset%2CDRM.RightsProfile.RightsProfileToAsset&renditions=thumbnail%2CdownloadPreview%2CdownloadOriginal%2CbigThumbnail%2Cmetadata"
+            },
+            "renditions": {
+                "downloadOriginal": [
+                    {
+                        "href": "https://delivery-qa.diageocontenthub.com/api/delivery/local-bb29095b6500435e974124aa1ff17fd9?intent=Download&expires=2021-07-10T17%3A41%3A56.8326626%2B00%3A00&entityid=4668432&userid=4634315&rendition=downloadOriginal&signature=Hl0Swpcztao"
+                    }
+                ],
+                "metadata": [
+                    {
+                        "href": "https://delivery-qa.diageocontenthub.com/api/delivery/local-b73426d0d37a4a829e10eedf9ec035b3?expires=2021-07-09T18%3A01%3A56.7026582%2B00%3A00&entityid=4668432&userid=4634315&rendition=metadata&signature=eZkR7e5xluw"
+                    }
+                ],
+                "downloadPreview": [
+                    {
+                        "href": "https://delivery-qa.diageocontenthub.com/api/delivery/local-e48bf52d9f74466a8d0078820566c323?intent=Download&expires=2021-07-09T18%3A01%3A56.8326626%2B00%3A00&entityid=4668432&userid=4634315&rendition=downloadPreview&signature=ozpzJR-4fpE"
+                    }
+                ],
+                "thumbnail": [
+                    {
+                        "href": "https://delivery-qa.diageocontenthub.com/api/delivery/local-4d30d2467f524d548de2e030f369e64c?expires=2021-07-09T18%3A01%3A56.7026582%2B00%3A00&entityid=4668432&userid=4634315&rendition=thumbnail&signature=YhdbAfFQkT4"
+                    }
+                ]
+            },
+            "related_paths": {
+                "CategoryToAsset": [
+                    [
+                        {
+                            "values": {
+                                "en-US": "Corporate"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/20475",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.Category"
+                        },
+                        {
+                            "values": {
+                                "en-US": "Corporate"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/20476",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.Category"
+                        },
+                        {
+                            "values": {
+                                "en-US": "Diageo"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/20477",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.Category"
+                        }
+                    ]
+                ],
+                "AssetTypeToAsset": [
+                    [
+                        {
+                            "values": {
+                                "en-US": "Still Image, Artwork or Graphic File"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/3700976",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/M.AssetType"
+                        },
+                        {
+                            "values": {
+                                "en-US": "Photography"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/4571034",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/M.AssetType"
+                        }
+                    ]
+                ],
+                "CreatorMarketToAsset": [
+                    [
+                        {
+                            "values": {
+                                "en-US": "Global"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/20790",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.CreatorMarket"
+                        }
+                    ]
+                ],
+                "CreatedForMarketToAsset": [
+                    [
+                        {
+                            "values": {
+                                "en-US": "Europe"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/21049",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.CreatedForMarket"
+                        },
+                        {
+                            "values": {
+                                "en-US": "GB"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/21062",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.CreatedForMarket"
+                        }
+                    ],
+                    [
+                        {
+                            "values": {
+                                "en-US": "Europe"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/21049",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.CreatedForMarket"
+                        },
+                        {
+                            "values": {
+                                "en-US": "IOI"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/4591625",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.CreatedForMarket"
+                        }
+                    ],
+                    [
+                        {
+                            "values": {
+                                "en-US": "Europe"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/21049",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.CreatedForMarket"
+                        },
+                        {
+                            "values": {
+                                "en-US": "IOI"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/4591625",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.CreatedForMarket"
+                        },
+                        {
+                            "values": {
+                                "en-US": "Ireland"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/21059",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.CreatedForMarket"
+                        }
+                    ],
+                    [
+                        {
+                            "values": {
+                                "en-US": "Europe"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/21049",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.CreatedForMarket"
+                        },
+                        {
+                            "values": {
+                                "en-US": "IOI"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/4591625",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.CreatedForMarket"
+                        },
+                        {
+                            "values": {
+                                "en-US": "Northern Ireland"
+                            },
+                            "entity": "https://31-qa.diageocontenthub.com/api/entities/2333181",
+                            "definition": "https://31-qa.diageocontenthub.com/api/entitydefinitions/Diageo.CreatedForMarket"
+                        }
+                    ]
+                ]
+            }
+        }]}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<vm:publish queueName="assetQueue" doc:name="Publish Data To Asset Queue" doc:id="382577c1-3b66-439c-bc9a-ad6d788f9f72" config-ref="vm-config" />
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="01c01c2d-00c0-45dd-adca-8f83a233ea09" type="VM:CONNECTIVITY, VM:QUEUE_TIMEOUT">
+				<ee:transform doc:name="Transform Message" doc:id="e69640cf-3c18-4c43-bac1-b80a3c6f69b0" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+
+---
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="get-all-assets" doc:id="1cc26631-51cd-484f-aab5-1ea81459031c" >
+		<vm:listener queueName="${vmqueue.name}" doc:name="Asset Queue Listener" doc:id="6a31b37b-3b5c-4f25-89c9-cd4722ccae00" config-ref="vm-config" numberOfConsumers="1" />
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="2a2b832a-519f-4432-8eb4-c10e2466a576" message='"get all assets flow started"' />
+		<foreach doc:name="For Each" doc:id="f2fe1fe0-1b26-450d-91c3-539a8516cd2e" collection="#[payload.items]" >
+			<ee:transform doc:name="Asset To Json" doc:id="3a923a19-ddbb-49a7-b305-586fa5627d37" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="originalAsset" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<choice doc:name="Usage Right Choice" doc:id="79e66dbd-2b5a-4cb4-a1ad-78699ba8f622" >
+				<when expression='#[payload.properties.UsageRightsType.identifier == "Restricted Use"]' >
+					<logger level="INFO" doc:name="Flow Started Logger" doc:id="b665772c-322c-4284-a60f-4e32257e6fb5" message="#[payload]" />
+					<http:request method="GET" doc:name="Request To Retrieve Item from MongoDB" doc:id="e516486c-3337-4f0c-a90c-22b12074b7ec" config-ref="http-request-mongo-sapi" path="#['/storageAssets/'++ vars.originalAsset.id]" responseTimeout="999999999" >
+						<http:body ><![CDATA[payload]]></http:body>
+					</http:request>
+					<ee:transform doc:name="Response To Json" doc:id="f0cae3ed-ad70-4be3-b32f-f670af31a84d" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+					<choice doc:name="Payload Content Choice" doc:id="fc90e164-b5b8-4876-a289-6f308eed5e5a" >
+						<when expression="#[payload != []]" >
+							<ee:transform doc:name="Input Data To Json" doc:id="94a2ee00-1822-4688-bac0-f14e55448cd8" >
+								<ee:message >
+									<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"assetId": vars.originalAsset.id,
+	"expirationTime" : "1000-12-31T23:59:59+00:00"
+}]]></ee:set-payload>
+								</ee:message>
+							</ee:transform>
+							<http:request method="PATCH" doc:name="Request To Update Asset in MongoDB" doc:id="bd3aec52-8447-4eed-8c37-27290464682b" config-ref="http-request-mongo-sapi" path="#['/storageAssets/'++ vars.originalAsset.id]" responseTimeout="999999999"/>
+							<logger level="INFO" doc:name="Flow Ended Logger" doc:id="82f16bdc-a0ac-4197-a173-726046c7aa5b" message='"flow ended succesfully"'/>
+						</when>
+						<otherwise >
+							<logger level="INFO" doc:name="Logger" doc:id="f788868b-c9e7-45f1-8b8f-5f8512e72db6" message='"the asset is not in mongoDB.move to next asset"' />
+						</otherwise>
+					</choice>
+				</when>
+				<otherwise >
+					<flow-ref doc:name="Flow Reference" doc:id="5046816d-e9c8-44e9-b40b-6b83991aad13" name="drm-right-to-asset-parentref-retrieval-and-update" />
+				</otherwise>
+			</choice>
+		</foreach>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d9400b6a-2834-4fb2-919b-a69e2d92eb25" type="HTTP:BAD_GATEWAY, HTTP:BAD_REQUEST, HTTP:FORBIDDEN, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE, S3:ACCESS_DENIED, S3:ACCOUNT_PROBLEM, S3:AMBIGUOUS_GRANT_BY_EMAIL_ADDRESS, S3:BAD_DIGEST, S3:BUCKET_ALREADY_EXISTS, S3:BUCKET_ALREADY_OWNED_BY_YOU, S3:BUCKET_NOT_EMPTY, S3:CONNECTIVITY, S3:CREDENTIALS_NOT_SUPPORTED, S3:CROSS_LOCATION_LOGGING_PROHIBITED, S3:ENTITY_TOO_LARGE, S3:ENTITY_TOO_SMALL, S3:EXPIRED_TOKEN, S3:ILLEGAL_VERSIONING_CONFIGURATION_EXCEPTION, S3:INCOMPLETE_BODY, S3:INCORRECT_NUMBER_OF_FILES_IN_POST_REQUEST, S3:INLINE_DATA_TOO_LARGE, S3:INTERNAL_ERROR, S3:INVALID_ACCESS_KEY_ID, S3:INVALID_ADDRESSING_HEADER, S3:INVALID_ARGUMENT, S3:INVALID_BUCKET_NAME, S3:INVALID_BUCKET_STATE, S3:INVALID_DIGEST, S3:INVALID_ENCRYPTION_ALGORITHM_ERROR, S3:INVALID_LOCATION_CONSTRAINT, S3:INVALID_OBJECT_STATE, S3:INVALID_PART, S3:INVALID_PART_ORDER, S3:INVALID_PAYER, S3:INVALID_POLICY_DOCUMENT, S3:INVALID_RANGE, S3:INVALID_REQUEST, S3:INVALID_RESPONSE_PRESIGNEDURL_MALFORMED, S3:INVALID_SECURITY, S3:INVALID_SOAP_REQUEST, S3:INVALID_STORAGE_CLASS, S3:INVALID_TARGET_BUCKET_FOR_LOGGING, S3:INVALID_TOKEN, S3:INVALID_URI, S3:KEY_TOO_LONG, S3:MALFORMED_ACL_ERROR, S3:MALFORMED_POST_REQUEST, S3:MALFORMED_XML, S3:MAX_MESSAGE_LENGTH_EXCEEDED, S3:MAX_POST_PRE_DATA_LENGTH_EXCEEDED_ERROR, S3:METADATA_TOO_LARGE, S3:METHOD_NOT_ALLOWED, S3:MISSING_ATTACHMENT, S3:MISSING_CONTENT_LENGTH, S3:MISSING_REQUEST_BODY_ERROR, S3:MISSING_SECURITY_ELEMENT, S3:MISSING_SECURITY_HEADER, S3:NOT_IMPLEMENTED, S3:NOT_SIGNED_UP, S3:NO_LOGGING_STATUS_FOR_KEY, S3:NO_SUCH_BUCKET, S3:NO_SUCH_BUCKET_POLICY, S3:NO_SUCH_KEY, S3:NO_SUCH_LIFECYCLE_CONFIGURATION, S3:NO_SUCH_UPLOAD, S3:NO_SUCH_VERSION, S3:OPERATION_ABORTED, S3:PERMANENT_REDIRECT, S3:PRECONDITION_FAILED, S3:REDIRECT, S3:REQUEST_IS_NOT_MULTI_PART_CONTENT, S3:REQUEST_TIMEOUT, S3:REQUEST_TIME_TOO_SKEWED, S3:REQUEST_TORRENT_OF_BUCKET_ERROR, S3:RESTORE_ALREADY_IN_PROGRESS, S3:RETRY_EXHAUSTED, S3:SERVICE_UNAVAILABLE, S3:SIGNATURE_DOES_NOT_MATCH, S3:SLOW_DOWN, S3:TEMPORARY_REDIRECT, S3:TOKEN_REFRESH_REQUIRED, S3:TOO_MANY_BUCKETS, S3:UNEXPECTED_CONTENT, S3:UNKNOWN, S3:UNRESOLVABLE_GRANT_BY_EMAIL_ADDRESS, S3:USER_KEY_MUST_BE_SPECIFIED">
+				<ee:transform doc:name="Error To Json" doc:id="2723e891-ec0a-49b8-b7b5-d807ad2d4699" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="drm-right-to-asset-parentref-retrieval-and-update" doc:id="29a9d6e2-eb76-4ca9-8b50-0d00ee775281" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="90d71f73-d84b-4679-b63a-90619998dee2" message='"DRM Right To Asset Parent Retrieval and Update flow started "' />
+		<ee:transform doc:name="Payload To Json" doc:id="2e6eae0a-a9a7-4901-9df5-5b234a70e031" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Payload Choice" doc:id="c4cb1175-f1ad-45e5-bacd-b3094fa358e6" >
+			<when expression="#[payload.relations.DRM_RightsProfile_RightsProfileToAsset.parents.href != null]" >
+				<ee:transform doc:name="Payload To Json" doc:id="e1af0aa8-ac8d-4072-bafd-d71d7b1bea97" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="parentHref" ><![CDATA[%dw 2.0
+output application/json
+---
+payload.relations.DRM_RightsProfile_RightsProfileToAsset.parents.href[0]
+]]></ee:set-variable>
+						<ee:set-variable variableName="originalAsset" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<http:request method="GET" doc:name="Asset Retrieval From SiteCore" doc:id="4ff756ea-b262-4b3c-bf31-c716fb3b07b9" config-ref="http-request-sitecore" path="${sitecore.path}" responseTimeout="999999999"/>
+				<ee:transform doc:name="Response To Json" doc:id="d9fcb1ed-42c2-4fb1-8d13-dcf3e63ee459" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+
+payload]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="parentHrefAsset" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<set-payload value="#[vars.originalAsset]" doc:name="Set Payload - Original Asset" doc:id="cbeec34c-4b8f-4684-9608-64656d6ef4ce" />
+				<ee:transform doc:name="Process Payload" doc:id="125487e2-7b8b-4cef-8471-85f4a6c66990" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::util::Values
+
+output application/json
+
+var obj = 
+[{
+    "id":vars.parentHrefAsset.id,
+    "identifier": vars.parentHrefAsset.identifier,
+    "properties": vars.parentHrefAsset.properties,
+    "relations": vars.parentHrefAsset.relations,
+    "related_paths": vars.parentHrefAsset.related_paths
+}]
+
+---
+
+payload update ["relations","DRM_RightsProfile_RightsProfileToAsset","parents"] with obj]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Flow Ended Logger" doc:id="33a25042-c03c-46dc-9bd4-3990ea81982c" message="#[payload]" />
+				<flow-ref doc:name="Created By Update Flow" doc:id="127d5eba-c36c-4250-8599-434554619714" name="created-by-update-flow"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Parent href Null Logger" doc:id="ac7ce02d-23aa-4b05-b029-626e63e6fe98" message='"parent empty"' />
+				<flow-ref doc:name="Created By Update Flow" doc:id="e7471c1b-34f9-4aaa-91f5-2720a27e1140" name="created-by-update-flow" />
+			</otherwise>
+		</choice>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="938db405-7539-4028-a8a9-16e8dfad5641" type="HTTP:BAD_GATEWAY, HTTP:BAD_REQUEST, HTTP:CONNECTIVITY, HTTP:FORBIDDEN, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE, S3:ACCESS_DENIED, S3:ACCOUNT_PROBLEM, S3:AMBIGUOUS_GRANT_BY_EMAIL_ADDRESS, S3:BAD_DIGEST, S3:BUCKET_ALREADY_EXISTS, S3:BUCKET_ALREADY_OWNED_BY_YOU, S3:BUCKET_NOT_EMPTY, S3:CONNECTIVITY, S3:CREDENTIALS_NOT_SUPPORTED, S3:CROSS_LOCATION_LOGGING_PROHIBITED, S3:ENTITY_TOO_LARGE, S3:ENTITY_TOO_SMALL, S3:EXPIRED_TOKEN, S3:ILLEGAL_VERSIONING_CONFIGURATION_EXCEPTION, S3:INCOMPLETE_BODY, S3:INCORRECT_NUMBER_OF_FILES_IN_POST_REQUEST, S3:INLINE_DATA_TOO_LARGE, S3:INTERNAL_ERROR, S3:INVALID_ACCESS_KEY_ID, S3:INVALID_ADDRESSING_HEADER, S3:INVALID_ARGUMENT, S3:INVALID_BUCKET_NAME, S3:INVALID_BUCKET_STATE, S3:INVALID_DIGEST, S3:INVALID_ENCRYPTION_ALGORITHM_ERROR, S3:INVALID_LOCATION_CONSTRAINT, S3:INVALID_OBJECT_STATE, S3:INVALID_PART, S3:INVALID_PART_ORDER, S3:INVALID_PAYER, S3:INVALID_POLICY_DOCUMENT, S3:INVALID_RANGE, S3:INVALID_REQUEST, S3:INVALID_RESPONSE_PRESIGNEDURL_MALFORMED, S3:INVALID_SECURITY, S3:INVALID_SOAP_REQUEST, S3:INVALID_STORAGE_CLASS, S3:INVALID_TARGET_BUCKET_FOR_LOGGING, S3:INVALID_TOKEN, S3:INVALID_URI, S3:KEY_TOO_LONG, S3:MALFORMED_ACL_ERROR, S3:MALFORMED_POST_REQUEST, S3:MALFORMED_XML, S3:MAX_MESSAGE_LENGTH_EXCEEDED, S3:MAX_POST_PRE_DATA_LENGTH_EXCEEDED_ERROR, S3:METADATA_TOO_LARGE, S3:METHOD_NOT_ALLOWED, S3:MISSING_ATTACHMENT, S3:MISSING_CONTENT_LENGTH, S3:MISSING_REQUEST_BODY_ERROR, S3:MISSING_SECURITY_ELEMENT, S3:MISSING_SECURITY_HEADER, S3:NOT_IMPLEMENTED, S3:NOT_SIGNED_UP, S3:NO_LOGGING_STATUS_FOR_KEY, S3:NO_SUCH_BUCKET, S3:NO_SUCH_BUCKET_POLICY, S3:NO_SUCH_KEY, S3:NO_SUCH_LIFECYCLE_CONFIGURATION, S3:NO_SUCH_UPLOAD, S3:NO_SUCH_VERSION, S3:OPERATION_ABORTED, S3:PERMANENT_REDIRECT, S3:PRECONDITION_FAILED, S3:REDIRECT, S3:REQUEST_IS_NOT_MULTI_PART_CONTENT, S3:REQUEST_TIMEOUT, S3:REQUEST_TIME_TOO_SKEWED, S3:REQUEST_TORRENT_OF_BUCKET_ERROR, S3:RESTORE_ALREADY_IN_PROGRESS, S3:RETRY_EXHAUSTED, S3:SERVICE_UNAVAILABLE, S3:SIGNATURE_DOES_NOT_MATCH, S3:SLOW_DOWN, S3:TEMPORARY_REDIRECT, S3:TOKEN_REFRESH_REQUIRED, S3:TOO_MANY_BUCKETS, S3:UNEXPECTED_CONTENT, S3:UNKNOWN, S3:UNRESOLVABLE_GRANT_BY_EMAIL_ADDRESS, S3:USER_KEY_MUST_BE_SPECIFIED, EXPRESSION, STREAM_MAXIMUM_SIZE_EXCEEDED">
+				<ee:transform doc:name="Error To Json" doc:id="51789856-749b-4919-87f0-fa01e1ede85c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="created-by-update-flow" doc:id="d6a21772-c8ba-42c2-9a2c-baf9ec3e8f0a" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="b0e2c0b9-884f-48c2-aa96-2b1eb08445e3" message='"created by update flow started"' />
+		<ee:transform doc:name="Payload To Json" doc:id="5e6889e0-2757-4cdf-a97a-f9bba6ba12bb" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="originalAsset" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Created By Choice" doc:id="d5cdc848-2568-4a10-a9cd-d7ea05b65db5" >
+			<when expression="#[payload.created_by.href != null]" >
+				<ee:transform doc:name="Created By Variable Settings" doc:id="0f0b27df-4178-4c83-8fba-18eef837d448" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="createdByHref" ><![CDATA[%dw 2.0
+output application/json
+---
+payload.relations.created_by.href]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<http:request method="GET" doc:name="Sitecore Asset Retrieval" doc:id="ae7a8b85-ea6f-4e91-858b-986349b3ec4e" config-ref="http-request-sitecore" path="${sitecore.createdByPath}" responseTimeout="999999999"/>
+				<ee:transform doc:name="Response To Json" doc:id="10893cb6-806b-4639-ab50-3ed106638296" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="createdByHrefContent" ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<set-payload value="#[vars.originalAsset]" doc:name="Set Asset Payload" doc:id="4556dc93-d002-42a0-a52c-eaec8ed55f6d" />
+				<ee:transform doc:name="Modify CreatedBy Object" doc:id="8e9ef459-68fc-420e-92ca-c57cc2117bd8" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::util::Values
+
+output application/json
+
+var obj = 
+{
+    "id":vars.createdByHrefContent.id,
+    "identifier": vars.createdByHrefContent.identifier,
+    "properties": vars.createdByHrefContent.properties,
+    
+}
+
+---
+
+payload update ["created_by"] with obj]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Flow Ended Logger" doc:id="9e9d8fdf-c5ff-44fb-88ea-5aec359f3201" message='"created by update flow ended"' />
+				<flow-ref doc:name="Modified By Update Flow" doc:id="cd56835c-e96d-46a3-b750-027504f96cc2" name="modified-by-update-flow" />
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Default Logger" doc:id="6361336b-80da-4d3c-b4c1-1b8301b484e5" message='"createdby is empty"' />
+				<flow-ref doc:name="Modified By Update Flow" doc:id="1a003545-8be3-44d2-b713-f446c184a02a" name="modified-by-update-flow" />
+			</otherwise>
+		</choice>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3b516b23-4c73-4c67-9053-ab0c0d3910c5" type="HTTP:BAD_GATEWAY, HTTP:BAD_REQUEST, HTTP:CONNECTIVITY, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE, S3:ACCESS_DENIED, S3:ACCOUNT_PROBLEM, S3:AMBIGUOUS_GRANT_BY_EMAIL_ADDRESS, S3:BAD_DIGEST, S3:BUCKET_ALREADY_EXISTS, S3:BUCKET_ALREADY_OWNED_BY_YOU, S3:BUCKET_NOT_EMPTY, S3:CONNECTIVITY, S3:CREDENTIALS_NOT_SUPPORTED, S3:CROSS_LOCATION_LOGGING_PROHIBITED, S3:ENTITY_TOO_LARGE, S3:ENTITY_TOO_SMALL, S3:EXPIRED_TOKEN, S3:ILLEGAL_VERSIONING_CONFIGURATION_EXCEPTION, S3:INCOMPLETE_BODY, S3:INCORRECT_NUMBER_OF_FILES_IN_POST_REQUEST, S3:INLINE_DATA_TOO_LARGE, S3:INTERNAL_ERROR, S3:INVALID_ACCESS_KEY_ID, S3:INVALID_ADDRESSING_HEADER, S3:INVALID_ARGUMENT, S3:INVALID_BUCKET_NAME, S3:INVALID_BUCKET_STATE, S3:INVALID_DIGEST, S3:INVALID_ENCRYPTION_ALGORITHM_ERROR, S3:INVALID_LOCATION_CONSTRAINT, S3:INVALID_OBJECT_STATE, S3:INVALID_PART, S3:INVALID_PART_ORDER, S3:INVALID_PAYER, S3:INVALID_POLICY_DOCUMENT, S3:INVALID_RANGE, S3:INVALID_REQUEST, S3:INVALID_RESPONSE_PRESIGNEDURL_MALFORMED, S3:INVALID_SECURITY, S3:INVALID_SOAP_REQUEST, S3:INVALID_STORAGE_CLASS, S3:INVALID_TARGET_BUCKET_FOR_LOGGING, S3:INVALID_TOKEN, S3:INVALID_URI, S3:KEY_TOO_LONG, S3:MALFORMED_ACL_ERROR, S3:MALFORMED_POST_REQUEST, S3:MALFORMED_XML, S3:MAX_MESSAGE_LENGTH_EXCEEDED, S3:MAX_POST_PRE_DATA_LENGTH_EXCEEDED_ERROR, S3:METADATA_TOO_LARGE, S3:METHOD_NOT_ALLOWED, S3:MISSING_ATTACHMENT, S3:MISSING_CONTENT_LENGTH, S3:MISSING_REQUEST_BODY_ERROR, S3:MISSING_SECURITY_ELEMENT, S3:MISSING_SECURITY_HEADER, S3:NOT_IMPLEMENTED, S3:NOT_SIGNED_UP, S3:NO_LOGGING_STATUS_FOR_KEY, S3:NO_SUCH_BUCKET, S3:NO_SUCH_BUCKET_POLICY, S3:NO_SUCH_KEY, S3:NO_SUCH_LIFECYCLE_CONFIGURATION, S3:NO_SUCH_UPLOAD, S3:NO_SUCH_VERSION, S3:OPERATION_ABORTED, S3:PERMANENT_REDIRECT, S3:PRECONDITION_FAILED, S3:REDIRECT, S3:REQUEST_IS_NOT_MULTI_PART_CONTENT, S3:REQUEST_TIMEOUT, S3:REQUEST_TIME_TOO_SKEWED, S3:REQUEST_TORRENT_OF_BUCKET_ERROR, S3:RESTORE_ALREADY_IN_PROGRESS, S3:RETRY_EXHAUSTED, S3:SERVICE_UNAVAILABLE, S3:SIGNATURE_DOES_NOT_MATCH, S3:SLOW_DOWN, S3:TEMPORARY_REDIRECT, S3:TOKEN_REFRESH_REQUIRED, S3:TOO_MANY_BUCKETS, S3:UNEXPECTED_CONTENT, S3:UNRESOLVABLE_GRANT_BY_EMAIL_ADDRESS, S3:USER_KEY_MUST_BE_SPECIFIED">
+				<ee:transform doc:name="Transform Message" doc:id="4acdd7a4-f3bd-4a77-ad86-7b2088dff5e5" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+call.errorPayload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="modified-by-update-flow" doc:id="884414ae-3506-4c0e-b985-53c8749735fd" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="11b0d5a1-b666-4309-9b04-4f4e8f4d9901" message='"modified by flow started"' />
+		<ee:transform doc:name="Copy Payload" doc:id="0c030676-70bb-4a13-9b8d-4741e519fb46" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="originalAsset" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Modified Field Choice" doc:id="26e12f63-0e5e-43ac-aac9-7e994d371bb2" >
+			<when expression="#[payload.modified_by.href != null]" >
+				<ee:transform doc:name="Modified Object" doc:id="2ce69916-c747-4394-a673-281ac60ec04b" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="modifiedByHref" ><![CDATA[%dw 2.0
+output application/json
+---
+payload.modified_by.href]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<http:request method="GET" doc:name="Retrieve Sitecore Asset" doc:id="7ac358d6-2ab7-4b4b-9ce0-47a456b3ca89" config-ref="http-request-sitecore" path="${sitecore.modifiedByPath}" responseTimeout="999999999"/>
+				<ee:transform doc:name="Response To Json" doc:id="4e0bdc00-852f-4916-b35d-1de993d0d428" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="modifiedByHrefContent" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<set-payload value="#[vars.originalAsset]" doc:name="Set Asset Payload" doc:id="a07e5f6f-f3b5-4911-bd1a-2a4193535cbe" />
+				<ee:transform doc:name="Modify Asset" doc:id="3850d8ff-622f-48fc-b802-a64dd177a8e9" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import * from dw::util::Values
+
+output application/json
+
+var obj = 
+{
+    "id":vars.modifiedByHrefContent.id,
+    "identifier": vars.modifiedByHrefContent.identifier,
+    "properties": vars.modifiedByHrefContent.properties,
+    
+}
+
+---
+
+payload update ["modified_by"] with obj]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Flow Ended Logger" doc:id="15a0da19-0b6d-4372-afb6-846ca1f65d9d" />
+				<flow-ref doc:name="Copy_of_Remove-Elements-Flow" doc:id="12d7c70b-97c9-4c72-b7c1-3736c0341d18" name="remove-elements-flow" />
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Modified Flow Default Logger" doc:id="f7d6928f-bbb2-438b-a527-c910710c8919" />
+				<flow-ref doc:name="Remove-Elements-Flow" doc:id="12c7abf3-74d5-4bf5-9c43-d9798f580b5f" name="remove-elements-flow" />
+			</otherwise>
+		</choice>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3c1ebdad-efbe-4ac6-b7f1-158494ac80ad" type="HTTP:BAD_GATEWAY, HTTP:CLIENT_SECURITY, HTTP:FORBIDDEN, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE, S3:ACCESS_DENIED, S3:ACCOUNT_PROBLEM, S3:AMBIGUOUS_GRANT_BY_EMAIL_ADDRESS, S3:BAD_DIGEST, S3:BUCKET_ALREADY_EXISTS, S3:BUCKET_ALREADY_OWNED_BY_YOU, S3:BUCKET_NOT_EMPTY, S3:CONNECTIVITY, S3:CREDENTIALS_NOT_SUPPORTED, S3:CROSS_LOCATION_LOGGING_PROHIBITED, S3:ENTITY_TOO_LARGE, S3:ENTITY_TOO_SMALL, S3:EXPIRED_TOKEN, S3:ILLEGAL_VERSIONING_CONFIGURATION_EXCEPTION, S3:INCOMPLETE_BODY, S3:INCORRECT_NUMBER_OF_FILES_IN_POST_REQUEST, S3:INLINE_DATA_TOO_LARGE, S3:INTERNAL_ERROR, S3:INVALID_ACCESS_KEY_ID, S3:INVALID_ADDRESSING_HEADER, S3:INVALID_ARGUMENT, S3:INVALID_BUCKET_NAME, S3:INVALID_BUCKET_STATE, S3:INVALID_DIGEST, S3:INVALID_ENCRYPTION_ALGORITHM_ERROR, S3:INVALID_LOCATION_CONSTRAINT, S3:INVALID_OBJECT_STATE, S3:INVALID_PART, S3:INVALID_PART_ORDER, S3:INVALID_PAYER, S3:INVALID_POLICY_DOCUMENT, S3:INVALID_RANGE, S3:INVALID_REQUEST, S3:INVALID_RESPONSE_PRESIGNEDURL_MALFORMED, S3:INVALID_SECURITY, S3:INVALID_SOAP_REQUEST, S3:INVALID_STORAGE_CLASS, S3:INVALID_TARGET_BUCKET_FOR_LOGGING, S3:INVALID_TOKEN, S3:INVALID_URI, S3:KEY_TOO_LONG, S3:MALFORMED_ACL_ERROR, S3:MALFORMED_POST_REQUEST, S3:MALFORMED_XML, S3:MAX_MESSAGE_LENGTH_EXCEEDED, S3:MAX_POST_PRE_DATA_LENGTH_EXCEEDED_ERROR, S3:METADATA_TOO_LARGE, S3:METHOD_NOT_ALLOWED, S3:MISSING_ATTACHMENT, S3:MISSING_CONTENT_LENGTH, S3:MISSING_REQUEST_BODY_ERROR, S3:MISSING_SECURITY_ELEMENT, S3:MISSING_SECURITY_HEADER, S3:NOT_IMPLEMENTED, S3:NOT_SIGNED_UP, S3:NO_LOGGING_STATUS_FOR_KEY, S3:NO_SUCH_BUCKET, S3:NO_SUCH_BUCKET_POLICY, S3:NO_SUCH_KEY, S3:NO_SUCH_LIFECYCLE_CONFIGURATION, S3:NO_SUCH_UPLOAD, S3:NO_SUCH_VERSION, S3:OPERATION_ABORTED, S3:PERMANENT_REDIRECT, S3:PRECONDITION_FAILED, S3:REDIRECT, S3:REQUEST_IS_NOT_MULTI_PART_CONTENT, S3:REQUEST_TIMEOUT, S3:REQUEST_TIME_TOO_SKEWED, S3:REQUEST_TORRENT_OF_BUCKET_ERROR, S3:RESTORE_ALREADY_IN_PROGRESS, S3:RETRY_EXHAUSTED, S3:SERVICE_UNAVAILABLE, S3:SIGNATURE_DOES_NOT_MATCH, S3:SLOW_DOWN, S3:TEMPORARY_REDIRECT, S3:TOKEN_REFRESH_REQUIRED, S3:TOO_MANY_BUCKETS, S3:UNEXPECTED_CONTENT, S3:UNKNOWN, S3:UNRESOLVABLE_GRANT_BY_EMAIL_ADDRESS, S3:USER_KEY_MUST_BE_SPECIFIED">
+				<ee:transform doc:name="Transform Message" doc:id="49b78aba-3cc3-47b8-947a-5d8ad79694af" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="remove-elements-flow" doc:id="0197c34d-9ddc-4b51-be94-d76249f677dc" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="7a246b6b-be0d-4e3a-95ad-7ca2a0dec1fc" message='"remove elements flow starts "' />
+		<ee:transform doc:name="Filter Relations" doc:id="b5f3cbbe-74b3-42de-ad28-35a185bb4a3a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+var arr = ["CategoryToAsset","AssetTypeToAsset",
+"AssetTypeToAsset","CreatedForMarketToAsset",
+"AvailableToToAsset","MasterFile"]
+
+---
+payload mapObject((value,key)->
+    if(key as String == "relations"){
+       (key): value filterObject ((value, key) -> !(arr contains (key) as String))
+    }
+    else{
+        (key): value
+    }
+) ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Filter Fields" doc:id="adc54252-4b09-4630-83ae-c833cd3db26b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+var arr = ["entitydefinition","copy","permissions",
+"lifecycle","lifecycle","annotations",
+"collections","is_root_taxonomy_item",
+"is_path_root","inherits_security",
+"is_system_owned","full","self"]
+---
+payload filterObject ((value, key, index) -> !(arr contains  (key) as String))
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Add Object" doc:id="d358e0ec-8792-49c0-8320-3b37ba3c79ce" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+var addObj={
+	"Element Name":	"SourceSystem",
+    "Value":		"SITECORE"
+	
+}
+---
+payload ++ addObj]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Flow Ended Logger" doc:id="c99cf7ad-c990-491b-9639-1e3a60c6e05f" message='"Remove elements flow ended"' />
+		<flow-ref doc:name="Asset Expiration Flow Reference" doc:id="537aca8e-2249-4407-b23a-de01b29a541b" name="asset-expiration-date-calculation-flow"/>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="a8382557-5d45-4467-974b-6c0c519cdd95" type="HTTP:BAD_GATEWAY, HTTP:BAD_REQUEST, HTTP:CONNECTIVITY, HTTP:FORBIDDEN, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE, S3:ACCESS_DENIED, S3:ACCOUNT_PROBLEM, S3:AMBIGUOUS_GRANT_BY_EMAIL_ADDRESS, S3:BAD_DIGEST, S3:BUCKET_ALREADY_EXISTS, S3:BUCKET_ALREADY_OWNED_BY_YOU, S3:BUCKET_NOT_EMPTY, S3:CONNECTIVITY, S3:CREDENTIALS_NOT_SUPPORTED, S3:CROSS_LOCATION_LOGGING_PROHIBITED, S3:ENTITY_TOO_LARGE, S3:ENTITY_TOO_SMALL, S3:EXPIRED_TOKEN, S3:ILLEGAL_VERSIONING_CONFIGURATION_EXCEPTION, S3:INCOMPLETE_BODY, S3:INCORRECT_NUMBER_OF_FILES_IN_POST_REQUEST, S3:INLINE_DATA_TOO_LARGE, S3:INTERNAL_ERROR, S3:INVALID_ACCESS_KEY_ID, S3:INVALID_ADDRESSING_HEADER, S3:INVALID_ARGUMENT, S3:INVALID_BUCKET_NAME, S3:INVALID_BUCKET_STATE, S3:INVALID_DIGEST, S3:INVALID_ENCRYPTION_ALGORITHM_ERROR, S3:INVALID_LOCATION_CONSTRAINT, S3:INVALID_OBJECT_STATE, S3:INVALID_PART, S3:INVALID_PART_ORDER, S3:INVALID_PAYER, S3:INVALID_POLICY_DOCUMENT, S3:INVALID_RANGE, S3:INVALID_REQUEST, S3:INVALID_RESPONSE_PRESIGNEDURL_MALFORMED, S3:INVALID_SECURITY, S3:INVALID_SOAP_REQUEST, S3:INVALID_STORAGE_CLASS, S3:INVALID_TARGET_BUCKET_FOR_LOGGING, S3:INVALID_TOKEN, S3:INVALID_URI, S3:KEY_TOO_LONG, S3:MALFORMED_ACL_ERROR, S3:MALFORMED_POST_REQUEST, S3:MALFORMED_XML, S3:MAX_MESSAGE_LENGTH_EXCEEDED, S3:MAX_POST_PRE_DATA_LENGTH_EXCEEDED_ERROR, S3:METADATA_TOO_LARGE, S3:METHOD_NOT_ALLOWED, S3:MISSING_ATTACHMENT, S3:MISSING_CONTENT_LENGTH, S3:MISSING_REQUEST_BODY_ERROR, S3:MISSING_SECURITY_ELEMENT, S3:MISSING_SECURITY_HEADER, S3:NOT_IMPLEMENTED, S3:NOT_SIGNED_UP, S3:NO_LOGGING_STATUS_FOR_KEY, S3:NO_SUCH_BUCKET, S3:NO_SUCH_BUCKET_POLICY, S3:NO_SUCH_KEY, S3:NO_SUCH_LIFECYCLE_CONFIGURATION, S3:NO_SUCH_UPLOAD, S3:NO_SUCH_VERSION, S3:OPERATION_ABORTED, S3:PERMANENT_REDIRECT, S3:PRECONDITION_FAILED, S3:REDIRECT, S3:REQUEST_IS_NOT_MULTI_PART_CONTENT, S3:REQUEST_TIMEOUT, S3:REQUEST_TIME_TOO_SKEWED, S3:REQUEST_TORRENT_OF_BUCKET_ERROR, S3:RESTORE_ALREADY_IN_PROGRESS, S3:RETRY_EXHAUSTED, S3:SERVICE_UNAVAILABLE, S3:SIGNATURE_DOES_NOT_MATCH, S3:SLOW_DOWN, S3:TEMPORARY_REDIRECT, S3:TOKEN_REFRESH_REQUIRED, S3:TOO_MANY_BUCKETS, S3:UNEXPECTED_CONTENT, S3:UNKNOWN, S3:UNRESOLVABLE_GRANT_BY_EMAIL_ADDRESS, S3:USER_KEY_MUST_BE_SPECIFIED">
+				<ee:transform doc:name="Transform Message" doc:id="ad4ce30f-363c-47d7-9461-38477934a0b9" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="asset-expiration-date-calculation-flow" doc:id="b0623e0a-61bb-4b3b-ab98-908991b06e1a" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="034101ab-10e0-4e0f-8436-00b9134e551a" message='"asst expiration date calculation flow started"' />
+		<ee:transform doc:name="Exipration Object" doc:id="77b8b74f-a1e0-44c2-a360-e32748ce673c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="originalAsset" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+				<ee:set-variable variableName="expirationDateObjectArray" ><![CDATA[%dw 2.0
+output application/json
+---
+payload.relations.DRM_RightsProfile_RightsProfileToAsset.parents map ((item, index) -> (
+    item.properties filterObject ((value, key, index) -> (key) as String == "DRM_RightsProfile_CalculatedExpirationDate")
+     
+    
+)
+)]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Process Expiration Object Array" doc:id="656c41d6-d3c6-48aa-8918-6bb08b700563" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+flatten(vars.expirationDateObjectArray map (item)->(
+    item pluck $
+))]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="expirationDateList" ><![CDATA[%dw 2.0
+output application/json
+---
+flatten(vars.expirationDateObjectArray map (item)->(
+    item pluck $
+))]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Expiratin Date Calculation" doc:id="3aaceb60-1042-49ec-9576-3619e638fe2d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="expirationDate" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+"expirationdate":if (vars.expirationDateList contains null ) null else max (vars.expirationDateList)
+}
+]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Flow Ended Logger" doc:id="b3b729a0-20ea-4773-8687-2701741a62b6" />
+		<flow-ref doc:name="Asset Insert Choice Flow" doc:id="9543dd68-4eba-4108-9419-e13ec8647aec" name="asset-insert-choice"/>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="571caf1a-5969-42d9-a005-94285074c5dd" type="ANY">
+				<ee:transform doc:name="Error To Json" doc:id="33de3d3f-f98a-4937-9440-817aa8b83ffd" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="asset-insert-choice" doc:id="814fb7d0-be1c-4f58-9b30-b379ade6772d" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="066c3470-8d69-441e-a12c-4355473c8147" />
+		<choice doc:name="Expiration Date Choice" doc:id="b5595a56-760e-46e3-89d9-6c7fa0a46104" >
+			<when expression="#[(now() &gt;&gt; 'Asia/Calcutta') as DateTime {format: &quot;dd-MMM-yy hh.mm.ss.SSSSSSSSS a VV&quot;} as String {format: &quot;yyyy-MM-dd'T'HH:mm:ss:SSS Z&quot;}&gt; vars.expirationDate.expirationdate]" >
+				<flow-ref doc:name="Past ExpirationDate Flow " doc:id="d051561b-71ad-4c8e-a6f7-791d271530dd" name="past-expiration-date-asset-flow" />
+			</when>
+			<otherwise >
+				<flow-ref doc:name="Insert To MongoDB" doc:id="e8b01d43-63f6-4e88-817a-ec00c96ab152" name="insert-to-mongodb" />
+			</otherwise>
+		</choice>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="19504ed8-021d-4b80-a0ef-c903ff9cc28d" type="HTTP:BAD_GATEWAY, HTTP:BAD_REQUEST, HTTP:FORBIDDEN, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE, S3:ACCESS_DENIED, S3:ACCOUNT_PROBLEM, S3:AMBIGUOUS_GRANT_BY_EMAIL_ADDRESS, S3:BAD_DIGEST, S3:BUCKET_ALREADY_EXISTS, S3:BUCKET_ALREADY_OWNED_BY_YOU, S3:BUCKET_NOT_EMPTY, S3:CONNECTIVITY, S3:CREDENTIALS_NOT_SUPPORTED, S3:CROSS_LOCATION_LOGGING_PROHIBITED, S3:ENTITY_TOO_LARGE, S3:ENTITY_TOO_SMALL, S3:EXPIRED_TOKEN, S3:ILLEGAL_VERSIONING_CONFIGURATION_EXCEPTION, S3:INCOMPLETE_BODY, S3:INCORRECT_NUMBER_OF_FILES_IN_POST_REQUEST, S3:INLINE_DATA_TOO_LARGE, S3:INTERNAL_ERROR, S3:INVALID_ACCESS_KEY_ID, S3:INVALID_ADDRESSING_HEADER, S3:INVALID_ARGUMENT, S3:INVALID_BUCKET_NAME, S3:INVALID_BUCKET_STATE, S3:INVALID_DIGEST, S3:INVALID_ENCRYPTION_ALGORITHM_ERROR, S3:INVALID_LOCATION_CONSTRAINT, S3:INVALID_OBJECT_STATE, S3:INVALID_PART, S3:INVALID_PART_ORDER, S3:INVALID_PAYER, S3:INVALID_POLICY_DOCUMENT, S3:INVALID_RANGE, S3:INVALID_REQUEST, S3:INVALID_RESPONSE_PRESIGNEDURL_MALFORMED, S3:INVALID_SECURITY, S3:INVALID_SOAP_REQUEST, S3:INVALID_STORAGE_CLASS, S3:INVALID_TARGET_BUCKET_FOR_LOGGING, S3:INVALID_TOKEN, S3:INVALID_URI, S3:KEY_TOO_LONG, S3:MALFORMED_ACL_ERROR, S3:MALFORMED_POST_REQUEST, S3:MALFORMED_XML, S3:MAX_MESSAGE_LENGTH_EXCEEDED, S3:MAX_POST_PRE_DATA_LENGTH_EXCEEDED_ERROR, S3:METADATA_TOO_LARGE, S3:METHOD_NOT_ALLOWED, S3:MISSING_ATTACHMENT, S3:MISSING_CONTENT_LENGTH, S3:MISSING_REQUEST_BODY_ERROR, S3:MISSING_SECURITY_ELEMENT, S3:MISSING_SECURITY_HEADER, S3:NOT_IMPLEMENTED, S3:NOT_SIGNED_UP, S3:NO_LOGGING_STATUS_FOR_KEY, S3:NO_SUCH_BUCKET, S3:NO_SUCH_BUCKET_POLICY, S3:NO_SUCH_KEY, S3:NO_SUCH_LIFECYCLE_CONFIGURATION, S3:NO_SUCH_UPLOAD, S3:NO_SUCH_VERSION, S3:OPERATION_ABORTED, S3:PERMANENT_REDIRECT, S3:PRECONDITION_FAILED, S3:REDIRECT, S3:REQUEST_IS_NOT_MULTI_PART_CONTENT, S3:REQUEST_TIMEOUT, S3:REQUEST_TIME_TOO_SKEWED, S3:REQUEST_TORRENT_OF_BUCKET_ERROR, S3:RESTORE_ALREADY_IN_PROGRESS, S3:RETRY_EXHAUSTED, S3:SERVICE_UNAVAILABLE, S3:SIGNATURE_DOES_NOT_MATCH, S3:SLOW_DOWN, S3:TEMPORARY_REDIRECT, S3:TOKEN_REFRESH_REQUIRED, S3:TOO_MANY_BUCKETS, S3:UNEXPECTED_CONTENT, S3:UNKNOWN, S3:UNRESOLVABLE_GRANT_BY_EMAIL_ADDRESS, S3:USER_KEY_MUST_BE_SPECIFIED">
+				<ee:transform doc:name="Error To Json" doc:id="68318186-849b-4f51-8893-626d5b2d733c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="past-expiration-date-asset-flow" doc:id="88540aa2-2886-482d-8e15-401087535a7a" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="038b4730-f3f0-487c-a5ce-c14e907107c5" message='"past expiration dateasset  flow started "'/>
+		<http:request method="GET" doc:name="Retrieve Asset From mongoDB" doc:id="04e04f82-ba9e-43e1-9676-c22e14fbbff7" config-ref="http-request-mongo-sapi" path="#['/storageAssets/'++ vars.originalAsset.id]" responseTimeout="99999999"/>
+		<ee:transform doc:name="Response To Json" doc:id="5c9a6519-5877-43dc-8cf7-f5f37ecde236" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Response Choice" doc:id="f1b0154c-e9c3-4fa8-8929-f6daa42191fa" >
+			<when expression="#[payload !=[]]" >
+				<ee:transform doc:name="Update Asset Fields" doc:id="034a94dd-554f-4963-98a9-4a46642fb628" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"assetId":vars.originalAsset.id,
+	"assetMimeType":vars.originalAsset.properties.MIMEType,
+	"assetName":vars.originalAsset.properties.Title,
+	"status":"NEW",
+	"expirationTime":vars.expirationDate.expirationdate,
+	
+	
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<http:request method="PATCH" doc:name="Update mongoDB Asset" doc:id="ae2bf291-617c-4faa-8e9c-81f557f25e2d" config-ref="http-request-mongo-sapi" path="#['/storageAssets/'++ vars.originalAsset.id]" responseTimeout="999999999"/>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="Paylod Null Logger" doc:id="77386a1d-c93f-4c91-8872-3bfb6201202b" message='"Past asset not contained in mongoDB"' />
+			</otherwise>
+		</choice>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="abc8b996-8d1e-4d25-8e67-187d01a7c4f0" type="HTTP:BAD_GATEWAY, HTTP:CONNECTIVITY, HTTP:FORBIDDEN, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE">
+				<ee:transform doc:name="Transform Message" doc:id="249ab16e-6967-4df4-84b7-1ac892b937c8" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="insert-to-mongodb" doc:id="7a3272b5-0737-4898-beea-c72741ae68ba" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="0d75f3fa-0f90-4380-90d1-6bed39671326" message='"insert to mongo flow started in papi"' />
+		<http:request method="GET" doc:name="Retrieve Asset From mongoDB" doc:id="60c05341-2cda-4f59-a06f-01ce9acd3608" config-ref="http-request-mongo-sapi" path="#['/storageAssets/'++ vars.originalAsset.id]" responseTimeout="999999999" >
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"id" : vars.originalAsset.id
+}]]]></http:uri-params>
+		</http:request>
+		<choice doc:name="Payload Choice" doc:id="e743e391-fe47-4fa5-bcab-9be93de6151c" >
+			<when expression="#[payload !=[]]" >
+				<ee:transform doc:name="Update Payload Creation" doc:id="5e38b1af-9848-405d-b6ae-d7961df3eb99" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"status":"NEW",
+    "updatedTime": now()
+
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<http:request method="PATCH" doc:name="Update Asset  Mongo" doc:id="ec23bd36-f3ec-4acc-b743-b4e4b88c538b" config-ref="http-request-mongo-sapi" path="#['/storageAssets/'++ vars.originalAsset.id]" responseTimeout="999999999"/>
+				<logger level="INFO" doc:name="Flow Ended Logger" doc:id="753d6289-bb02-415e-b01b-70d195451ef7" message='"mongo db asset exists"' />
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Create Asset Json" doc:id="d37a2939-31f3-4818-86bf-eb1e4269a4b1" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"assetId":vars.originalAsset.id,
+	"objectKey":vars.originalAsset.identifier,
+	"assetMimeType":vars.originalAsset.properties.MIMEType,
+	"assetName":vars.originalAsset.properties.Title,
+	"status":"NEW",
+	"expirationTime":vars.expirationDate.expirationdate  as DateTime ,
+	"createdBy" : "integration user",
+    "createdTime": "2021-05-07T08:24:44.041Z",
+    "updatedTime": now(),
+    "assetJson":vars.originalAsset
+	
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<http:request method="POST" doc:name="Insert Asset To MongoDB Request" doc:id="02537dd2-58b1-4bab-aff8-537d3da3f114" config-ref="http-request-mongo-sapi" path="${mongosapi.insertPath}" responseTimeout="999999999" />
+				<logger level="INFO" doc:name="Flow Ended Logger" doc:id="b4693eba-8711-4500-bbb8-959ece931302" message='"insert to mongodb flow eneded in papi"' />
+			</otherwise>
+		</choice>
+		<flow-ref doc:name="S3 Bucket Insertion And MongoDB Update Flow" doc:id="85d94f58-6980-4317-b684-88ade046feb7" name="s3bucket-insertion-and-mongodb-update-flow" />
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="0f03dd91-a1c8-4ff2-8bde-51a671c645e3" type="HTTP:BAD_GATEWAY, HTTP:CONNECTIVITY, HTTP:FORBIDDEN, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE, S3:ACCESS_DENIED, S3:ACCOUNT_PROBLEM, S3:AMBIGUOUS_GRANT_BY_EMAIL_ADDRESS, S3:BAD_DIGEST, S3:BUCKET_ALREADY_EXISTS, S3:BUCKET_ALREADY_OWNED_BY_YOU, S3:BUCKET_NOT_EMPTY, S3:CONNECTIVITY, S3:CREDENTIALS_NOT_SUPPORTED, S3:CROSS_LOCATION_LOGGING_PROHIBITED, S3:ENTITY_TOO_LARGE, S3:ENTITY_TOO_SMALL, S3:EXPIRED_TOKEN, S3:ILLEGAL_VERSIONING_CONFIGURATION_EXCEPTION, S3:INCOMPLETE_BODY, S3:INCORRECT_NUMBER_OF_FILES_IN_POST_REQUEST, S3:INLINE_DATA_TOO_LARGE, S3:INTERNAL_ERROR, S3:INVALID_ACCESS_KEY_ID, S3:INVALID_ADDRESSING_HEADER, S3:INVALID_ARGUMENT, S3:INVALID_BUCKET_NAME, S3:INVALID_BUCKET_STATE, S3:INVALID_DIGEST, S3:INVALID_ENCRYPTION_ALGORITHM_ERROR, S3:INVALID_LOCATION_CONSTRAINT, S3:INVALID_OBJECT_STATE, S3:INVALID_PART, S3:INVALID_PART_ORDER, S3:INVALID_PAYER, S3:INVALID_POLICY_DOCUMENT, S3:INVALID_RANGE, S3:INVALID_REQUEST, S3:INVALID_RESPONSE_PRESIGNEDURL_MALFORMED, S3:INVALID_SECURITY, S3:INVALID_SOAP_REQUEST, S3:INVALID_STORAGE_CLASS, S3:INVALID_TARGET_BUCKET_FOR_LOGGING, S3:INVALID_TOKEN, S3:INVALID_URI, S3:KEY_TOO_LONG, S3:MALFORMED_ACL_ERROR, S3:MALFORMED_POST_REQUEST, S3:MALFORMED_XML, S3:MAX_MESSAGE_LENGTH_EXCEEDED, S3:MAX_POST_PRE_DATA_LENGTH_EXCEEDED_ERROR, S3:METADATA_TOO_LARGE, S3:METHOD_NOT_ALLOWED, S3:MISSING_ATTACHMENT, S3:MISSING_CONTENT_LENGTH, S3:MISSING_REQUEST_BODY_ERROR, S3:MISSING_SECURITY_ELEMENT, S3:MISSING_SECURITY_HEADER, S3:NOT_IMPLEMENTED, S3:NOT_SIGNED_UP, S3:NO_LOGGING_STATUS_FOR_KEY, S3:NO_SUCH_BUCKET, S3:NO_SUCH_BUCKET_POLICY, S3:NO_SUCH_KEY, S3:NO_SUCH_LIFECYCLE_CONFIGURATION, S3:NO_SUCH_UPLOAD, S3:NO_SUCH_VERSION, S3:OPERATION_ABORTED, S3:PERMANENT_REDIRECT, S3:PRECONDITION_FAILED, S3:REDIRECT, S3:REQUEST_IS_NOT_MULTI_PART_CONTENT, S3:REQUEST_TIMEOUT, S3:REQUEST_TIME_TOO_SKEWED, S3:REQUEST_TORRENT_OF_BUCKET_ERROR, S3:RESTORE_ALREADY_IN_PROGRESS, S3:RETRY_EXHAUSTED, S3:SERVICE_UNAVAILABLE, S3:SIGNATURE_DOES_NOT_MATCH, S3:SLOW_DOWN, S3:TEMPORARY_REDIRECT, S3:TOKEN_REFRESH_REQUIRED, S3:TOO_MANY_BUCKETS, S3:UNEXPECTED_CONTENT, S3:UNKNOWN, S3:UNRESOLVABLE_GRANT_BY_EMAIL_ADDRESS, S3:USER_KEY_MUST_BE_SPECIFIED, EXPRESSION, STREAM_MAXIMUM_SIZE_EXCEEDED">
+				<ee:transform doc:name="Transform Message" doc:id="fa19b782-c262-4897-9a26-e86c88427a12" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="s3bucket-insertion-and-mongodb-update-flow" doc:id="553a71f8-714c-4b42-88b5-f2879f8dca20" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="c68fe440-d06a-44e2-8286-fd7bc59b269f" message='"S3 bucket insertion started in sitecore system papi"' />
+		<ee:transform doc:name="Asset Creation To S3" doc:id="5974524b-f68a-4e5c-a1fd-2c5b7475d0bf" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"assetId":vars.originalAsset.id,
+	"objectKey":vars.originalAsset.identifier,
+	"assetMimeType":vars.originalAsset.properties.MIMEType,
+	"assetName":vars.originalAsset.properties.Title,
+	"status":"NEW",
+	"expirationTime":vars.expirationDate.expirationdate,
+	"createdBy" : "integration user",
+    "createdTime": "2021-05-07T08:24:44.041Z",
+    "updatedTime": now(),
+    "assetJson":vars.originalAsset
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<s3:create-object doc:id="47991e17-56db-4f54-b489-855be0cf1eb1" config-ref="amazon-s3-configuration" bucketName="${s3.bucket}" key="#[payload.assetId]" doc:name="Add Asset To S3" />
+		<logger level="INFO" doc:name="S3 Add Item Logger" doc:id="bc0a580f-52ae-4642-ad80-f38c39a8f65f" message='"mongoDB update flow in papi started"' />
+		<ee:transform doc:name="Update Payload Creation" doc:id="1d6e1693-b433-4119-b7e5-86daeb37a0ea" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"status":"Published"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="PATCH" doc:name="Update Asset MongoDB" doc:id="72474ab0-8c60-4bc0-940d-98ac9b2ddd3e" config-ref="http-request-mongo-sapi" path="#['/storageAssets/'++ vars.originalAsset.id]" responseTimeout="999999999"/>
+		<logger level="INFO" doc:name="Flow Ended Logger" doc:id="fab06d5d-1e20-4665-8390-2ca3a309b532" message='"mongoDB update flow ends in papi"' />
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9d8ff362-9426-45e0-9580-dd593c332122" type="ANY">
+				<ee:transform doc:name="Error To Json" doc:id="fc4b146f-4435-4d59-b498-6bb229cf7d4b" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="delete-asset-flow" doc:id="546dbc1b-6752-4b57-9a3c-e83a4073dc5b" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="3fc135b7-041b-4f9a-b652-d1a0b49ddf20" message='"delete asset flow started in papi"' />
+		<ee:transform doc:name="Payload To MongoDB" doc:id="92b0d0db-dd11-45e3-93e8-192b6d617a7f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"expirationTime": {"\$gte": now()}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="GET" doc:name="Expired Asset Retrieval " doc:id="f3cc5fac-f9a7-49cf-8b04-cbf4a1b961ce" config-ref="http-request-mongo-sapi" path="${mongosapi.getPath}" responseTimeout="999999999"/>
+		<foreach doc:name="For Each" doc:id="1aeee6ff-a0a5-4293-876a-74029f1a9ab8" >
+			<http:request method="GET" doc:name="Retrieve SiteCore ASsset" doc:id="029b04c5-5a2e-43da-8713-4610476c76de" config-ref="http_request_sitecore-sapi" path="${sitecoresapi.getAssetPath}"/>
+			<ee:transform doc:name="Update Content" doc:id="ba6dde1b-752f-4c8f-89ce-d82376910cb8" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::sitecoreupdate as call
+output application/json
+
+---
+ call::main(payload: payload)]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<http:request method="PUT" doc:name="Update SiteCore Asset" doc:id="8c21db28-e64a-4f4d-88ee-eba60a12e707" config-ref="http_request_sitecore-sapi" path="${sitecoresapi.updateAssetPath}"/>
+			<s3:delete-object doc:name="Delete S3 Object" doc:id="db42507b-3dc5-4378-9b80-ff2d63e469f1" config-ref="amazon-s3-configuration" bucketName="${s3.bucket}" key="#[payload.assetId]" />
+			<http:request method="DELETE" doc:name="Delete Mongo Asset" doc:id="492ab180-d28e-4f44-ba98-cdf35f713b6f" config-ref="http-request-mongo-sapi" path="#['/storageAssets/'++ payload.assetId]" responseTimeout="999999999"/>
+		</foreach>
+		<ee:transform doc:name="Delete Message" doc:id="0713e8d1-590d-40d8-b33e-9ffc000993f7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message":"deleted successfully"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Flow Ended Logger" doc:id="1960f3b9-e4c4-458b-9477-06679ad7631c" message='#["flow ended"]' />
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="4df80cb6-d8b7-4bfb-84d5-b621b7c66263" type="HTTP:BAD_GATEWAY, HTTP:BAD_REQUEST, HTTP:CONNECTIVITY, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE, S3:ACCESS_DENIED, S3:ACCOUNT_PROBLEM, S3:AMBIGUOUS_GRANT_BY_EMAIL_ADDRESS, S3:BAD_DIGEST, S3:BUCKET_ALREADY_EXISTS, S3:BUCKET_ALREADY_OWNED_BY_YOU, S3:BUCKET_NOT_EMPTY, S3:CONNECTIVITY, S3:CREDENTIALS_NOT_SUPPORTED, S3:CROSS_LOCATION_LOGGING_PROHIBITED, S3:ENTITY_TOO_LARGE, S3:ENTITY_TOO_SMALL, S3:EXPIRED_TOKEN, S3:ILLEGAL_VERSIONING_CONFIGURATION_EXCEPTION, S3:INCOMPLETE_BODY, S3:INCORRECT_NUMBER_OF_FILES_IN_POST_REQUEST, S3:INLINE_DATA_TOO_LARGE, S3:INTERNAL_ERROR, S3:INVALID_ACCESS_KEY_ID, S3:INVALID_ADDRESSING_HEADER, S3:INVALID_ARGUMENT, S3:INVALID_BUCKET_NAME, S3:INVALID_BUCKET_STATE, S3:INVALID_DIGEST, S3:INVALID_ENCRYPTION_ALGORITHM_ERROR, S3:INVALID_LOCATION_CONSTRAINT, S3:INVALID_OBJECT_STATE, S3:INVALID_PART, S3:INVALID_PART_ORDER, S3:INVALID_PAYER, S3:INVALID_POLICY_DOCUMENT, S3:INVALID_RANGE, S3:INVALID_REQUEST, S3:INVALID_RESPONSE_PRESIGNEDURL_MALFORMED, S3:INVALID_SECURITY, S3:INVALID_SOAP_REQUEST, S3:INVALID_STORAGE_CLASS, S3:INVALID_TARGET_BUCKET_FOR_LOGGING, S3:INVALID_TOKEN, S3:INVALID_URI, S3:KEY_TOO_LONG, S3:MALFORMED_ACL_ERROR, S3:MALFORMED_POST_REQUEST, S3:MALFORMED_XML, S3:MAX_MESSAGE_LENGTH_EXCEEDED, S3:MAX_POST_PRE_DATA_LENGTH_EXCEEDED_ERROR, S3:METADATA_TOO_LARGE, S3:METHOD_NOT_ALLOWED, S3:MISSING_ATTACHMENT, S3:MISSING_CONTENT_LENGTH, S3:MISSING_REQUEST_BODY_ERROR, S3:MISSING_SECURITY_ELEMENT, S3:MISSING_SECURITY_HEADER, S3:NOT_IMPLEMENTED, S3:NOT_SIGNED_UP, S3:NO_LOGGING_STATUS_FOR_KEY, S3:NO_SUCH_BUCKET, S3:NO_SUCH_BUCKET_POLICY, S3:NO_SUCH_KEY, S3:NO_SUCH_LIFECYCLE_CONFIGURATION, S3:NO_SUCH_UPLOAD, S3:NO_SUCH_VERSION, S3:OPERATION_ABORTED, S3:PERMANENT_REDIRECT, S3:PRECONDITION_FAILED, S3:REDIRECT, S3:REQUEST_IS_NOT_MULTI_PART_CONTENT, S3:REQUEST_TIMEOUT, S3:REQUEST_TIME_TOO_SKEWED, S3:REQUEST_TORRENT_OF_BUCKET_ERROR, S3:RESTORE_ALREADY_IN_PROGRESS, S3:RETRY_EXHAUSTED, S3:SERVICE_UNAVAILABLE, S3:SIGNATURE_DOES_NOT_MATCH, S3:SLOW_DOWN, S3:TEMPORARY_REDIRECT, S3:TOKEN_REFRESH_REQUIRED, S3:TOO_MANY_BUCKETS, S3:USER_KEY_MUST_BE_SPECIFIED">
+				<ee:transform doc:name="Error To Json" doc:id="7e253490-92d8-4917-8a77-bd710093bd2d" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="update-sitecore-url" doc:id="fba14844-8d7d-4d7a-84ca-4bd30ced044e" >
+		<jms:listener doc:id="6cf53dc5-5249-4af5-9343-6e11dee232b9" destination="${jms.queue}" numberOfConsumers="1" doc:name="On New Message" config-ref="jms-config"/>
+		<ee:transform doc:name="Data To Json" doc:id="7699ff87-5e3b-49e1-a3dd-96276229bfc6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="updateObject" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<http:request method="GET" doc:name="Retrieve Asset" doc:id="154c6147-666f-4145-a8ba-95d48bc5095d" config-ref="http_request_sitecore-sapi" path="${sitecoresapi.getAssetPath}" responseTimeout="999999999" >
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"x-auth-token" : "r56rytgyu76",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+		</http:request>
+		<ee:transform doc:name="Update Asset" doc:id="d7d3c693-99e3-4d2a-8be8-3d6759b67103" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+var arr = ["OriginalAssetURL"
+,"ThumbnailURL","Thumbnail1URL","BigThumbnailURL","PreviewURL",
+"Desktop1URL","Desktop2URL","Mobile1URL","Mobile2URL","PSDHighResURL","PSDLowResURL
+"]
+
+---
+payload mapObject((value,key)->
+    if(key as String == "properties")  	
+    	(key):value mapObject((value,key)->
+    	if(arr contains key as String){
+    		(key):vars.updateObject.object_keys."$(key)"
+    	}
+    	else{
+    		(key):(value)
+    	}
+    	)
+    	       
+    
+    else{
+        (key): value
+    }
+) ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="PUT" doc:name="Update SiteCore Asset" doc:id="628204a3-d83e-4f31-b01c-4d30c51ec542" config-ref="http_request_sitecore-sapi" path="${sitecoresapi.updateAssetPath}" responseTimeout="999999999" >
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"x-auth-token" : "hghg7788",
+	"Content-Type" : "application/json"
+}]]]></http:headers>
+		</http:request>
+		<ee:transform doc:name="Succes Message" doc:id="740e396d-061d-4998-b226-35fb03dda763" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "asset updated "
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Flow Ended Logger" doc:id="6f4e3584-84af-4c3f-8296-4f106e8a537c" message='"updateurl flow end succesfully in papi"' />
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="1969f39e-3846-438c-9869-1a305fcd5a0d" type="HTTP:BAD_GATEWAY, HTTP:CLIENT_SECURITY, HTTP:CONNECTIVITY, HTTP:FORBIDDEN, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE, EXPRESSION, STREAM_MAXIMUM_SIZE_EXCEEDED">
+				<ee:transform doc:name="Error To Json" doc:id="68b0715a-4f07-418b-8781-40eb2b41eab1" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>
