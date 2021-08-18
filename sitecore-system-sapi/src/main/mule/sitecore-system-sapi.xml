@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="3b043c99-2cfe-4888-810a-d978e54ac42f" >
+		<http:listener-connection host="0.0.0.0" port="8085" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="2142f5cf-9c99-4437-96cc-c5b730d9c1f0" >
+		<http:request-connection protocol="HTTPS" host="localhost" port="8082" >
+			<tls:context >
+				<tls:trust-store path="E:/Certificates/sitecore-client-truststore.jks" password="sitecore" type="jks" />
+			</tls:context>
+		</http:request-connection>
+	</http:request-config>
+	<flow name="api-health-check" doc:id="218d256d-152d-4888-b118-661c0cc18172" >
+		<ee:transform doc:name="Transform Message" doc:id="69761bc5-e88f-4ac9-b765-9c49816698b2" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+"application_name":p("application_name"),
+"application_version":p("application_version"),
+"api_name":p("application_instanceName"),
+"environment":p('mule-env'),
+"status":p("application.status")
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="get-asset-by-id-flow" doc:id="09e1b890-2b6a-4939-944a-1d2e5225ca49" >
+		<logger level="INFO" doc:name="Logger" doc:id="cda067bc-9617-4ace-9884-482507b40a7f" message='"get asset by id in sitecore sapi started"'/>
+		<http:request method="${sitecore.methodPost}" doc:name="Request Sitecore Entity" doc:id="fa662e26-162f-43b5-91d2-560c21da3ddb" config-ref="http-request-configuration" responseTimeout="999999999" path="${sitecore.pathOne}">
+			<http:uri-params ><![CDATA[#[output application/java
+---
+{
+	"Key" : "Value"
+}]]]></http:uri-params>
+		</http:request>
+		<ee:transform doc:name="Data Transformed To Json" doc:id="3a21e22b-b156-437b-b1cf-0fde007d7f07" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="a608d230-f80c-43e9-a50e-7751cbab6b00" message='"get asset by id flow ended succesfully"'/>
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9cc866fd-bacb-4a04-9c88-97551da19768" type="HTTP:CLIENT_SECURITY, HTTP:CONNECTIVITY, HTTP:FORBIDDEN, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE, EXPRESSION, STREAM_MAXIMUM_SIZE_EXCEEDED">
+				<ee:transform doc:name="Transform Message" doc:id="c8d75d6b-c958-4f46-a39a-195d792a8321" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="update-url-flow" doc:id="e4cd7684-36b0-4c34-9d5a-310181663b96" >
+		<logger level="INFO" doc:name="Started Flow Logger" doc:id="1176a9c9-d3f7-4cc4-b9e1-9deeb1033044" message='"update url floe started in sapi"'/>
+		<http:request method="${sitecore.methodUpdate}" doc:name="Update Sitecore Entity" doc:id="f5670b00-a35d-4baa-8c68-867b020b044b" path="${sitecore.pathOne}" config-ref="http-request-configuration" responseTimeout="999999999"/>
+		<logger level="INFO" doc:name="Ended Flow Logger" doc:id="f4d730c7-4c64-4c85-bc8c-bb1402ef4e2f" message='"update url ended in sapi"'/>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="6c368796-78eb-4f19-868b-80048890be55" type="HTTP:BAD_GATEWAY, HTTP:BAD_REQUEST, HTTP:CONNECTIVITY, HTTP:FORBIDDEN, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_ACCEPTABLE, HTTP:NOT_FOUND, HTTP:PARSING, HTTP:RETRY_EXHAUSTED, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNAUTHORIZED, HTTP:UNSUPPORTED_MEDIA_TYPE, EXPRESSION, STREAM_MAXIMUM_SIZE_EXCEEDED">
+				<ee:transform doc:name="Transform Message" doc:id="4000b247-71e0-4d94-a093-acd030921652" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+
+---
+
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="get-all-assets" doc:id="5cec406c-e5c9-4cc5-bfff-6ca52f7c001f" >
+		<logger level="INFO" doc:name="Started Flow Logger" doc:id="aa7a165b-4f81-42fc-b5b8-61f5da80bfa7" message='"get all assets flow started"'/>
+		<http:request method="${sitecore.methodPost}" doc:name="Get All Item Request" doc:id="ca3e1503-4c21-46a2-a864-d28cc7b31c2d" path="${sitecore.pathAll}" config-ref="http-request-configuration" responseTimeout="999999999"/>
+		<logger level="INFO" doc:name="Flow Ended Logger" doc:id="02452f5f-f935-420a-9eec-adcfb50e4276" message='"get all assets flow ended in sapi"'/>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="86ff02f4-30ae-4e1c-acdb-5c53e8c58639" type="HTTP:BAD_REQUEST, HTTP:FORBIDDEN, HTTP:INTERNAL_SERVER_ERROR, HTTP:METHOD_NOT_ALLOWED, HTTP:NOT_FOUND, HTTP:SECURITY, HTTP:SERVICE_UNAVAILABLE, HTTP:TIMEOUT, HTTP:TOO_MANY_REQUESTS, HTTP:UNSUPPORTED_MEDIA_TYPE">
+				<ee:transform doc:name="Transform Message" doc:id="05e24d9a-2739-46dd-979a-169764b43591" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+import dwl::error as call
+output application/json
+---
+{
+	"Error_Code":error.id,
+	"Error_Message": error.message,
+	"Error_Description":error.description
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="sitecore-system-sapiFlow" doc:id="80e813b2-a5ed-4f14-be53-811c4eaf5e87" >
+		<http:listener doc:name="Listener" doc:id="09a8d114-0a8b-4c2e-9ed1-715ace3099e0" config-ref="sitecore-assets-sapi-http-listener-config" path="/ssltest"/>
+		<logger level="INFO" doc:name="Logger" doc:id="6e2fe285-9c2c-4c5d-9f58-830458bcc438" message='"logger in server"'/>
+	</flow>
+	<flow name="sitecore-system-sapiFlow1" doc:id="0c0fc398-627b-49d5-ae3d-5e80faa369b3" >
+		<http:listener doc:name="Listener" doc:id="f72115e7-8bea-486b-bb31-40604551c4aa" config-ref="HTTP_Listener_config" path="/sslClient"/>
+		<http:request method="GET" doc:name="Request" doc:id="28f6beb1-2d7b-4e1f-a56a-1c423e14da1f" config-ref="HTTP_Request_configuration" path="/ssltest"/>
+	</flow>
+</mule>

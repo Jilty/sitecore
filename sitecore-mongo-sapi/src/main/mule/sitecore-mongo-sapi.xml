@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:mongo="http://www.mulesoft.org/schema/mule/mongo"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mongo/current/mule-mongo.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="api-health-check" doc:id="ec23468f-85ab-409c-a1fb-0725aab575fc" >
+		<ee:transform doc:name="Transform Message" doc:id="4c0da128-a0e1-48ea-b88d-c6300c9e976e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+"application_name":p("application_name"),
+"application_version":p("application_version"),
+"api_name":p("application_instanceName"),
+"environment":p('mule-env'),
+"status":p("application.status")
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="add-asset-flow" doc:id="28644e0e-c959-40fc-a22a-91cd8b1843b1" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="5d2e966a-6e34-4d4f-8dbf-f3a156fce3d3" message='"add asset flow started"' />
+		<ee:transform doc:name="Transform Payload To Json" doc:id="e1e7cd62-cb97-4d06-8b69-6c799a771812" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<mongo:insert-document collectionName="assets" doc:name="Insert document" doc:id="48797a8d-f966-44c0-b99c-da16569fd760" config-ref="mongodb-config" writeConcernTimeout="999999999" />
+		<ee:transform doc:name="Transform Response To Json" doc:id="91cfac01-aa72-42c4-8f56-dbc02d8f88d6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Flow Ended Logger" doc:id="3b4cd175-47b7-4a73-9e26-5d7e0176da70" message='"inserted successfully"' />
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="0916eb33-5b01-4c3a-bbb6-209598550f05" type="MONGO:CONNECTIVITY, MONGO:DUPLICATE_ERROR, MONGO:INVALID_INPUT, MONGO:TIMEOUT">
+				<ee:transform doc:name="Transform Message" doc:id="ef67f7e2-ffd4-4d31-9234-95057cd0c1d2" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Code": error.errorType,
+	"Error Message": error.errorMessage,
+	"Error Description": error.detailedDescription
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="update-asset-flow" doc:id="ecd9fdd3-5bab-4dfa-bf6b-dfdb5fd6af07" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="a2ee29f2-d6d1-4a64-8250-34a3af139276" message='"update asset flow started"' />
+		<ee:transform doc:name="Payload To Json" doc:id="6156bee7-95f7-42be-872a-737cc52faf25" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="assetId" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"assetId": attributes.uriParams.storageAssetID
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<mongo:update-documents collectionName="assets" doc:name="Update documents" doc:id="cdcc3f6f-29ed-4447-97ae-9598f8a4bf68" config-ref="mongodb-config" >
+			<mongo:query ><![CDATA[#[vars.assetId]]]></mongo:query>
+		</mongo:update-documents>
+		<logger level="INFO" doc:name="Flow Ended Logger" doc:id="eff77b5c-da3e-4297-bffa-37042d0e627b" message='"update succesfully"' />
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d1f6120d-72ac-4a7a-aad2-cc816d47028e" >
+				<ee:transform doc:name="Transform Message" doc:id="274169fc-a9c4-47c1-b458-83ce286d30e7" >
+					<ee:message >
+						<ee:set-payload resource="error.dwl" />
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="get-asset-by-id-flow" doc:id="b8af99cc-b1f0-43f2-9476-445a6c6d1379" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="8a2fb046-5941-4916-ac01-49f1010877fb" message='"get item flow started in sapi"' />
+		<ee:transform doc:name="Get Id From Attributes" doc:id="fa6c9860-9fe1-4462-a8d8-9c5220f9f33a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Id": attributes.uriParams.storageAssetID as Number
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<mongo:find-documents collectionName="assets" fields="assetId,objectKey,assetMimeType,assetName,status,expirationTime,createdBy,createdTime,updatedTime,assetJson" doc:name="Find documents" doc:id="07915ad6-7159-4f49-ae33-d446b8e46377" config-ref="mongodb-config" >
+			<mongo:query ><![CDATA[#[{
+"assetId": payload.Id
+}]]]></mongo:query>
+		</mongo:find-documents>
+		<ee:transform doc:name="Conver Response To Json" doc:id="63180309-1654-4180-bd74-d36d9db773ec" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Flow Ended Logger" doc:id="da2adae6-4a75-4ad3-a2dd-f6abdbf834c8" />
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="32fe452f-2955-4181-8638-7799d65747ad" type="MONGO:CONNECTIVITY, MONGO:INVALID_INPUT, MONGO:NOT_FOUND, MONGO:PERMISSIONS_DENIED, EXPRESSION, STREAM_MAXIMUM_SIZE_EXCEEDED">
+				<ee:transform doc:name="Transform Message" doc:id="f4adf03c-91c9-4c51-9348-b5afe9d1a25c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Code": error.errorType,
+	"Error Message": error.errorMessage,
+	"Error Description": error.detailedDescription
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="delete-item-flow" doc:id="9e577bca-389c-444b-8d19-dc0b41b89309" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="fffd1a00-e234-4e08-8c16-4a8a5f32dfd5" message='"delete item flow started"' />
+		<ee:transform doc:name="Get Id From Attributes" doc:id="fdbede51-a0a3-4725-a0bb-a405e6db7447" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Id": attributes.uriParams.storageAssetID as Number
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<mongo:remove-documents collectionName="assets" doc:name="Remove documents" doc:id="d722bd8d-0386-4561-8f95-8670b5ff5be8" config-ref="mongodb-config" >
+			<mongo:query ><![CDATA[#[{
+"assetId":payload.Id
+}]]]></mongo:query>
+		</mongo:remove-documents>
+		<ee:transform doc:name="Response To Json" doc:id="36edbfca-cd4b-4d25-aa02-ed5bce04805d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Flow Ended logger" doc:id="c8c8e03c-389f-4f24-9924-aa09a38ec648" message='"delete item succesfully"' />
+	</flow>
+	<flow name="get-expired-asset-flow" doc:id="97d30483-2f93-4d82-aab2-8ba4e0573a58" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="25dce9eb-773e-47b2-87e8-590778df9e20" message='"get exipired asset flow started in sapi"' />
+		<ee:transform doc:name="Payload To Json" doc:id="19cdac4f-bc5c-44dd-baf7-8000f4dbb8f0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"expirationTime": {"\$gte": now()}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<mongo:find-documents collectionName="assets" fields="assetId,assetMimeType" doc:name="Find documents" doc:id="394b23d4-87a0-444e-a330-c73c1b69e3cd" config-ref="mongodb-config" >
+			<mongo:query ><![CDATA[#[payload]]]></mongo:query>
+		</mongo:find-documents>
+		<ee:transform doc:name="Response To Json" doc:id="07a6d58d-e093-489d-bdef-267b6ab4f8ec" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Flow Ended Logger" doc:id="a2bb4abf-8daf-4c26-87a4-617946f091e5" message='"get expired asset flow ended in sapi"' />
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3f3140eb-6928-4cbc-bdfe-db795f2bfffc" >
+				<ee:transform doc:name="Transform Message" doc:id="8f77dfa0-0839-4572-ba1a-e3fd993df240" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Code": error.errorType,
+	"Error Message": error.errorMessage,
+	"Error Description": error.detailedDescription
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>

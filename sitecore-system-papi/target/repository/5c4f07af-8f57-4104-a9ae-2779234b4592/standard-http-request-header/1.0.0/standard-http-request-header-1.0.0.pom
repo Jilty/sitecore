@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>5c4f07af-8f57-4104-a9ae-2779234b4592</groupId>
+  <artifactId>standard-http-request-header</artifactId>
+  <version>1.0.0</version>
+  <name>Standard HTTP Request Header</name>
+  <properties>
+    <classifier>raml-fragment</classifier>
+    <main>standard-http-request-header.raml</main>
+    <originalFormatVersion>1.0</originalFormatVersion>
+    <projectId>f3215cfe-e6c6-4394-ae68-72088d3aeedd</projectId>
+    <branchId>master</branchId>
+    <commitId>1b5684d3b834a69fa65ced9a8f4fb0d89b939524</commitId>
+    <type>raml-fragment</type>
+    <mainFile>standard-http-request-header.raml</mainFile>
+  </properties>
+  <repositories>
+    <repository>
+      <id>anypoint-exchange</id>
+      <url>https://maven.anypoint.mulesoft.com/api/v3/maven</url>
+    </repository>
+  </repositories>
+</project>
