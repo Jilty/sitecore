@@ -54,13 +54,6 @@
             <version>1.2.0</version>
             <classifier>mule-plugin</classifier>
         </dependency>
-		<dependency>
-            <groupId>5c4f07af-8f57-4104-a9ae-2779234b4592</groupId>
-            <artifactId>sitecore-mongo-sapi</artifactId>
-            <version>1.0.2</version>
-            <classifier>raml</classifier>
-            <type>zip</type>
-        </dependency>
     	<dependency>
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-apikit-module</artifactId>
@@ -77,6 +70,13 @@
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-legacy</artifactId>
             <version>4.0.4</version>
+        </dependency>
+    	<dependency>
+            <groupId>5c4f07af-8f57-4104-a9ae-2779234b4592</groupId>
+            <artifactId>sitecore-mongo-sapi</artifactId>
+            <version>1.0.3</version>
+            <classifier>raml</classifier>
+            <type>zip</type>
         </dependency>
     </dependencies>
 

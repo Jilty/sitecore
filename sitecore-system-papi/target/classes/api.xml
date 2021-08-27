@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
-    <apikit:config name="sitecore-system-papi-config1" api="resource::5c4f07af-8f57-4104-a9ae-2779234b4592:sitecore-system-papi:1.0.1:raml:zip:sitecore-system-papi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
+    <apikit:config name="sitecore-system-papi-config1" api="resource::5c4f07af-8f57-4104-a9ae-2779234b4592:sitecore-system-papi:1.0.2:raml:zip:sitecore-system-papi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="sitecore-system-papi-main">
         <http:listener config-ref="http-listener-config" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
@@ -121,15 +121,18 @@ output application/json
         </error-handler>
     </flow>
     <flow name="put:\assets:application\json:sitecore-system-papi-config">
-        <flow-ref doc:name="Flow Reference" doc:id="611bb266-6bf8-4b4b-bcb5-a73b23a00779" name="update-sitecore-url"/>
+        <flow-ref doc:name="Flow Reference" doc:id="611bb266-6bf8-4b4b-bcb5-a73b23a00779" name="update-sitecore-url" />
     </flow>
     <flow name="get:\assets:sitecore-system-papi-config">
-        <flow-ref doc:name="Flow Reference" doc:id="184f81e7-cbff-424f-8199-b2ebcccef8f4" name="delete-asset-flow"/>
+        <flow-ref doc:name="Flow Reference" doc:id="184f81e7-cbff-424f-8199-b2ebcccef8f4" name="delete-asset-flow" />
     </flow>
     <flow name="get:\healthCheckAPI:sitecore-system-papi-config">
-		<flow-ref doc:name="Flow Reference" doc:id="e22c1228-7b11-4184-b1a4-2afe149f7d4b" name="api-health-check"/>
+        <flow-ref doc:name="Flow Reference" doc:id="e22c1228-7b11-4184-b1a4-2afe149f7d4b" name="api-health-check" />
     </flow>
     <flow name="post:\assets:application\json:sitecore-system-papi-config">
-        <flow-ref doc:name="Flow Reference" doc:id="c7f5bdf9-0055-4e7e-b926-3b7e36c8fc26" name="get-and-publish-assets"/>
+        <flow-ref doc:name="Flow Reference" doc:id="c7f5bdf9-0055-4e7e-b926-3b7e36c8fc26" name="get-and-publish-assets" />
+    </flow>
+    <flow name="delete:\assets:sitecore-system-papi-config">
+		<flow-ref doc:name="Flow Reference" doc:id="1126035a-3463-4cd0-9c08-e028cf9aaa31" name="delete-asset-flow"/>
     </flow>
 </mule>

@@ -1,44 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
-	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
-	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
-	xmlns:s3="http://www.mulesoft.org/schema/mule/s3" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
-http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd
-http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
-http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
-http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd">
-	<http:listener-config name="http-listener-config" doc:name="HTTP Listener config" doc:id="a756ad84-69c2-4c2d-9d6e-d01bec7ddcfc" >
-		<http:listener-connection host="${http.host}" port="${http.port}" />
-	</http:listener-config>
-	<configuration-properties doc:name="Configuration properties" doc:id="7c144bde-b18f-4cad-9fc7-92fc3899a6b3" file="properties/${env}.yaml" />
-	<global-property doc:name="Global Property" doc:id="8706eb74-23e2-4115-a84e-aab10864c632" name="env" value="local" />
-	<s3:config name="amazon-s3-configuration" doc:name="Amazon S3 Configuration" doc:id="e028cde6-9482-4a9e-804c-397b07f2ccad" >
-		<s3:basic-connection accessKey="${secure::s3.accesskey}" secretKey="${secure::s3.secretkey}" region="AP_SOUTH_1" />
-	</s3:config>
-	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="94eec422-7eeb-4d11-b694-de492c1c042d" file="properties/${env}.yaml" key="MuleSoft" >
-		<secure-properties:encrypt algorithm="Blowfish" />
-	</secure-properties:config>
-	<vm:config name="vm-config" doc:name="VM Config" doc:id="fbfe67be-4968-4fca-970d-1fc7c683226c" >
-		<vm:queues >
-			<vm:queue queueName="${vmqueue.name}" />
-		</vm:queues>
-	</vm:config>
-	<apikit:config outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" doc:name="Router" doc:id="3c78a7be-1a53-4f22-a4b5-3bb2a60a4721" name="sitecore-system-papi-config" api="resource::5c4f07af-8f57-4104-a9ae-2779234b4592:sitecore-system-papi:1.0.1:raml:zip:sitecore-system-papi.raml"/>
-<http:request-config name="http-request-mongo-sapi" doc:name="HTTP Request configuration" doc:id="fc2568e7-bc37-479b-b58d-cd4f76a113cb" basePath="${mongosapi.baseUrl}">
-		<http:request-connection host="${mongosapi.host}" port="${mongosapi.port}"/>
-	</http:request-config>
-	<http:request-config name="http-request-sitecore" doc:name="HTTP Request configuration" doc:id="5fdab5d8-a48e-4e00-aa83-448a3e7db27b" basePath="${sitecore.basePath}">
-		<http:request-connection host="${sitecore.host}" />
-	</http:request-config>
-	<http:request-config name="http_request_sitecore-sapi" doc:name="HTTP Request configuration" doc:id="2d02497a-a6af-421f-b0e4-3b4cc48810a6" basePath="${sitecoresapi.baseUrl}">
-		<http:request-connection protocol="${sitecoresapi.protocol}" host="${sitecoresapi.host}" port="${sitecoresapi.port}" />
-	</http:request-config>
-	<jms:config name="jms-config" doc:name="JMS Config" doc:id="53334689-7e5e-4d61-b64e-f04ec4eacc12" >
-		<jms:active-mq-connection username="${jms.username}" password="${jms.password}" >
-			<jms:factory-configuration brokerUrl="${jms.url}"/>
-		</jms:active-mq-connection>
-	</jms:config>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:s3="http://www.mulesoft.org/schema/mule/s3" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/s3 http://www.mulesoft.org/schema/mule/s3/current/mule-s3.xsd http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+    <http:listener-config name="http-listener-config" doc:name="HTTP Listener config" doc:id="a756ad84-69c2-4c2d-9d6e-d01bec7ddcfc">
+        <http:listener-connection host="${http.host}" port="${http.port}" />
+    </http:listener-config>
+    <configuration-properties doc:name="Configuration properties" doc:id="7c144bde-b18f-4cad-9fc7-92fc3899a6b3" file="properties/${env}.yaml" />
+    <global-property doc:name="Global Property" doc:id="8706eb74-23e2-4115-a84e-aab10864c632" name="env" value="local" />
+    <s3:config name="amazon-s3-configuration" doc:name="Amazon S3 Configuration" doc:id="e028cde6-9482-4a9e-804c-397b07f2ccad">
+        <s3:basic-connection accessKey="${secure::s3.accesskey}" secretKey="${secure::s3.secretkey}" region="AP_SOUTH_1" />
+    </s3:config>
+    <secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="94eec422-7eeb-4d11-b694-de492c1c042d" file="properties/${env}.yaml" key="MuleSoft">
+        <secure-properties:encrypt algorithm="Blowfish" />
+    </secure-properties:config>
+    <vm:config name="vm-config" doc:name="VM Config" doc:id="fbfe67be-4968-4fca-970d-1fc7c683226c">
+        <vm:queues>
+            <vm:queue queueName="${vmqueue.name}" />
+            <vm:queue queueName="updateQueue" />
+        </vm:queues>
+    </vm:config>
+    <apikit:config name="sitecore-system-papi-config" api="resource::5c4f07af-8f57-4104-a9ae-2779234b4592:sitecore-system-papi:1.0.2:raml:zip:sitecore-system-papi.raml" outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" />
+    <http:request-config name="http-request-mongo-sapi" doc:name="HTTP Request configuration" doc:id="fc2568e7-bc37-479b-b58d-cd4f76a113cb" basePath="${mongosapi.baseUrl}">
+        <http:request-connection host="${mongosapi.host}" port="${mongosapi.port}" />
+    </http:request-config>
+    <http:request-config name="http-request-sitecore" doc:name="HTTP Request configuration" doc:id="5fdab5d8-a48e-4e00-aa83-448a3e7db27b" basePath="${sitecore.basePath}">
+        <http:request-connection host="${sitecore.host}" />
+    </http:request-config>
+    <http:request-config name="http_request_sitecore-sapi" doc:name="HTTP Request configuration" doc:id="2d02497a-a6af-421f-b0e4-3b4cc48810a6" basePath="${sitecoresapi.baseUrl}">
+        <http:request-connection protocol="${sitecoresapi.protocol}" host="${sitecoresapi.host}" port="${sitecoresapi.port}" />
+    </http:request-config>
 </mule>

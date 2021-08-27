@@ -1,0 +1,57 @@
+http:
+ host: "0.0.0.0"
+ port: "8083"
+ path: "/api/*"
+ 
+vmqueue:
+ name: "assetQueue" 
+
+mongosapi:
+  host: "sitecore-mongo-sapi.us-e2.cloudhub.io"
+  port: "80"
+  baseUrl: "/api"  
+  insertPath: "/storageAssets" 
+  getPath: "/storageAssets" 
+  
+sitecore:
+  host: "sitecore-integration.us-e2.cloudhub.io" 
+  basePath: "/"
+  path: "/hrefentities/1861637"
+  createdByPath: "/createdby/6"
+  modifiedByPath: "/modifiedby/120941"
+
+  
+  
+sitecoresapi:
+  host: "sitecore-system-sapi.us-e2.cloudhub.io"  
+  port: "80"
+  baseUrl: "/api"
+  protocol: "HTTP"   
+  getAllAsset: "/assets"
+  getAssetPath: "/assets/575365"
+  updateAssetPath: "/assets/575365/updateUrl"
+  x-auth-token: "qwerty123"
+  
+s3:
+  accesskey: "![qcqrQkmwU5K3LStVupunpvZfYLj+JrGK]"
+  secretkey: "![GyUnuz4IECgkdI/5KFvWrrm1ZIbHH1sEHWet/Zd0VOc7Z9n/1AsMZ+FBYA+Gi9Bk]"     
+  region: "AP_SOUTH_1"        
+  bucket: "sitecore-assets-data" 
+s12:  
+  accesskey: "AKIAUN54ZL3ALJHBK3XY"
+  secretkey: "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"    
+
+  
+jms:
+  username: "admin"
+  password: "admin"
+  url: "tcp://localhost:61616"
+  queue: "SiteCoreAssets"  
+  
+application:
+  name: "SiteCore System PAPI"  
+  version: "1.0" 
+  instanceName: "papi" 
+  env: "local"
+  status: "active"              
+ 

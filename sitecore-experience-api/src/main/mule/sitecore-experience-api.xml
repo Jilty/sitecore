@@ -1,65 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
-	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5a132bdf-644a-4cc6-810d-d709367b5086" >
-		<http:listener-connection host="0.0.0.0" port="8086" />
-	</http:listener-config>
-	<jms:config name="JMS_Config" doc:name="JMS Config" doc:id="042803cf-c5b7-4b33-966e-69750358996d" >
-		<jms:active-mq-connection username="admin" password="admin" >
-			<jms:factory-configuration brokerUrl="tcp://localhost:61616" />
-		</jms:active-mq-connection>
-	</jms:config>
-	<flow name="sitecore-experience-apiFlow" doc:id="f771bc69-29de-456f-9745-5119a1d32f40" >
-		<http:listener doc:name="Listener" doc:id="6b8e4ba8-f339-4307-909b-5147da4ac725" config-ref="HTTP_Listener_config" path="/updateUrl"/>
-		<ee:transform doc:name="Transform Message" doc:id="04875099-06ad-4812-9484-70dea49611d9" >
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="update-url-flow" doc:id="2291f2cd-bb39-40d2-9ff3-f79822f20df9" >
+		<logger level="INFO" doc:name="Flow Started Logger" doc:id="3c377367-fe8f-4239-a29c-ca0dac8e53ec" message='"update flow started in eapi"'/>
+		<ee:transform doc:name="Transform Message" doc:id="8189d25d-3f67-4b66-95a2-5ceb25d95c12" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
-{
-"id": 3129307,
-"object_keys": {
- "AssetAuditFinalStatus": null,
-        "AssetAuditComments": null,
-        "SAPCategoryLevel": null,
-        "SAPProductCode": null,
-        "OriginalAssetURL": "TEST-FLOR-3",
-        "ThumbnailURL": null,
-        "Thumbnail1URL": null,
-        "BigThumbnailURL": null,
-        "PreviewURL": null,
-        "Desktop1URL": null,
-        "Desktop2URL": null,
-        "Mobile1URL": null,
-        "Mobile2URL": null,
-        "PSDHighResURL": null,
-        "PSDLowResURL":null
-		}
-		}]]></ee:set-payload>
+payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<jms:publish doc:id="dbb9f9af-1801-475f-aa8e-5fdb3e16b27c" destination="SiteCoreAssets" config-ref="JMS_Config"/>
-		<error-handler >
-			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3171a182-8657-4ef3-b737-0a3eae9b088b" type="JMS:CONNECTIVITY, JMS:DESTINATION_NOT_FOUND, JMS:ILLEGAL_BODY, JMS:PUBLISHING, JMS:SECURITY">
-				<ee:transform doc:name="Transform Message" doc:id="a75e638c-5765-435a-9863-a704ec17327e" >
-					<ee:message >
-						<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-
-{
-	"ErrorCode":error.code,
-	"Error_Message":error.description,
-	"Error_description":error.detailedDescription
-}]]></ee:set-payload>
-					</ee:message>
-				</ee:transform>
-			</on-error-propagate>
-		</error-handler>
+		<http:request method="PUT" doc:name="Request" doc:id="f235b4aa-6626-450d-84df-a60911f4c26d" config-ref="http_request_configuration" path="/assets"/>
 	</flow>
 </mule>

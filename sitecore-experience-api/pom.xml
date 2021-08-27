@@ -65,6 +65,19 @@
             <artifactId>activemq-kahadb-store</artifactId>
             <version>5.15.4</version>
         </dependency>
+    	<dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-apikit-module</artifactId>
+            <version>1.4.1</version>
+            <classifier>mule-plugin</classifier>
+        </dependency>
+    	<dependency>
+            <groupId>5c4f07af-8f57-4104-a9ae-2779234b4592</groupId>
+            <artifactId>sitecore-experience-api</artifactId>
+            <version>1.0.1</version>
+            <classifier>raml</classifier>
+            <type>zip</type>
+        </dependency>
     </dependencies>
 
 	<repositories>

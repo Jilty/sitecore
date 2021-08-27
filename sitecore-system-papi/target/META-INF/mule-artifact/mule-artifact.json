@@ -15,7 +15,9 @@
       "exportedPackages": [],
       "exportedResources": [
         "api.xml",
-        "dwl/error.dwl",
+        "certificates/sitecore-client-truststore.jks",
+        "certificates/sitecore-server-keystore.jks",
+        "dwl/createdbyupdate.dwl",
         "dwl/sitecoreupdate.dwl",
         "global.xml",
         "log4j2.xml",

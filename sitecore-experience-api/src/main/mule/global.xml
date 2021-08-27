@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="http-listener-config" doc:name="HTTP Listener config" doc:id="35505d62-4b6e-4282-8223-e79f07113dbf" >
+		<http:listener-connection host="0.0.0.0" port="8085" />
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="2e9508c0-8d58-4f09-b471-3de8e274468f" file="properties/${env}.yaml" />
+	<global-property doc:name="Global Property" doc:id="f8568c83-e57f-41d0-96e1-d68ffa1bbb5f" name="env" value="local" />
+	<http:request-config name="http_request_configuration" doc:name="HTTP Request configuration" doc:id="506cb704-7c2b-4261-8f64-c10cda2077d2" basePath="/api">
+		<http:request-connection host="${sitecorepapi.host}" port="${sitecorepapi.port}" />
+	</http:request-config>
+</mule>

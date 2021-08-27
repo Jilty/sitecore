@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="e2dd8587-85f2-4d5c-924a-df7fb63c46f5" >
+		<http:listener-connection host="0.0.0.0" port="8082" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="8cccde96-b127-4b42-a342-516f7e2d1c66" >
+		<http:request-connection protocol="HTTPS" host="localhost" port="8081" >
+		</http:request-connection>
+	</http:request-config>
+	<flow name="ssl-clientFlow" doc:id="bfeeb70b-00d8-4c15-bbb1-b00d2445f9b1" >
+		<http:listener doc:name="Listener" doc:id="ddb94b52-52d5-4bf9-9b1d-e36e433b9813" config-ref="HTTP_Listener_config" path="/sslClient"/>
+		<http:request method="GET" doc:name="Request" doc:id="c2ba62f4-072e-4fc4-b385-a90bf7385478" config-ref="HTTP_Request_configuration" path="/sslServer"/>
+	</flow>
+</mule>

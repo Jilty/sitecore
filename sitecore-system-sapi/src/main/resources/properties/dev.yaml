@@ -1,0 +1,18 @@
+http:
+ host: "sitecore-system-sapi.us-e2.cloudhub.io"
+ port: "80"
+ path: "/api/*"
+sitecore:
+   host: "sitecore-integration.us-e2.cloudhub.io"
+   pathOne: "/entities/575365"
+   pathAll: "/search"
+   methodPost: "POST"
+   methodUpdate: "PUT"
+application:
+  name: "SiteCore System SAPI"  
+  version: "1.0" 
+  instanceName: "sapi" 
+  env: "local"
+  status: "active" 
+     
+   

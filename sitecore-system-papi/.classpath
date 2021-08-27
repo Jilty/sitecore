@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="con" path="org.mule.tooling.API_SPEC_LIB/5c4f07af-8f57-4104-a9ae-2779234b4592/sitecore-system-papi/1.0.2"/>
 	<classpathentry kind="con" path="org.mule.tooling.MULE_PROJECT_LIB"/>
 	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.modules/mule-secure-configuration-property-module/1.2.3"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.connectors/mule-jms-connector/1.7.1"/>
 	<classpathentry kind="con" path="MULE_LIB/com.mulesoft.connectors/mule-amazon-s3-connector/5.7.0"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.connectors/mule-vm-connector/2.0.0"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.modules/mule-apikit-module/1.4.1"/>
-	<classpathentry kind="con" path="org.mule.tooling.API_SPEC_LIB/5c4f07af-8f57-4104-a9ae-2779234b4592/sitecore-system-papi/1.0.1"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.connectors/mule-sockets-connector/1.2.0"/>
 	<classpathentry kind="con" path="MULE_LIB/org.mule.connectors/mule-http-connector/1.5.23"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>

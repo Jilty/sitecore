@@ -7,16 +7,16 @@ http://www.mulesoft.org/schema/mule/mongo http://www.mulesoft.org/schema/mule/mo
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 	<flow name="api-health-check" doc:id="ec23468f-85ab-409c-a1fb-0725aab575fc" >
-		<ee:transform doc:name="Transform Message" doc:id="4c0da128-a0e1-48ea-b88d-c6300c9e976e" >
+		<ee:transform doc:name="Health Check Transform" doc:id="4c0da128-a0e1-48ea-b88d-c6300c9e976e" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
 {
-"application_name":p("application_name"),
-"application_version":p("application_version"),
-"api_name":p("application_instanceName"),
-"environment":p('mule-env'),
+"application_name":p("application.name"),
+"application_version":p("application.version"),
+"api_name":p("application.instanceName"),
+"environment":p('application.env'),
 "status":p("application.status")
 }]]></ee:set-payload>
 			</ee:message>
@@ -73,7 +73,7 @@ payload]]></ee:set-payload>
 output application/json
 ---
 {
-	"assetId": attributes.uriParams.storageAssetID
+	"assetId": attributes.uriParams.storageAssetID as Number
 }]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
@@ -83,7 +83,7 @@ output application/json
 		<logger level="INFO" doc:name="Flow Ended Logger" doc:id="eff77b5c-da3e-4297-bffa-37042d0e627b" message='"update succesfully"' />
 		<error-handler>
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d1f6120d-72ac-4a7a-aad2-cc816d47028e" >
-				<ee:transform doc:name="Transform Message" doc:id="274169fc-a9c4-47c1-b458-83ce286d30e7" >
+				<ee:transform doc:name="Error To Json" doc:id="274169fc-a9c4-47c1-b458-83ce286d30e7" >
 					<ee:message >
 						<ee:set-payload resource="error.dwl" />
 					</ee:message>
@@ -108,7 +108,7 @@ output application/json
 "assetId": payload.Id
 }]]]></mongo:query>
 		</mongo:find-documents>
-		<ee:transform doc:name="Conver Response To Json" doc:id="63180309-1654-4180-bd74-d36d9db773ec" >
+		<ee:transform doc:name="Response To Json" doc:id="7123509e-c895-4f53-b517-9bfc038bb412" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -116,10 +116,18 @@ output application/json
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<ee:transform doc:name="Remove Id" doc:id="63180309-1654-4180-bd74-d36d9db773ec" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+if (payload != []) [payload[0] -- ["_id"]] else payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 		<logger level="INFO" doc:name="Flow Ended Logger" doc:id="da2adae6-4a75-4ad3-a2dd-f6abdbf834c8" />
 		<error-handler>
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="32fe452f-2955-4181-8638-7799d65747ad" type="MONGO:CONNECTIVITY, MONGO:INVALID_INPUT, MONGO:NOT_FOUND, MONGO:PERMISSIONS_DENIED, EXPRESSION, STREAM_MAXIMUM_SIZE_EXCEEDED">
-				<ee:transform doc:name="Transform Message" doc:id="f4adf03c-91c9-4c51-9348-b5afe9d1a25c" >
+				<ee:transform doc:name="Error To Json" doc:id="f4adf03c-91c9-4c51-9348-b5afe9d1a25c" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
@@ -187,7 +195,7 @@ payload]]></ee:set-payload>
 		<logger level="INFO" doc:name="Flow Ended Logger" doc:id="a2bb4abf-8daf-4c26-87a4-617946f091e5" message='"get expired asset flow ended in sapi"' />
 		<error-handler>
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3f3140eb-6928-4cbc-bdfe-db795f2bfffc" >
-				<ee:transform doc:name="Transform Message" doc:id="8f77dfa0-0839-4572-ba1a-e3fd993df240" >
+				<ee:transform doc:name="Error To Json" doc:id="8f77dfa0-0839-4572-ba1a-e3fd993df240" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
 output application/json

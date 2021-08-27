@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd
-http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
-	<configuration-properties doc:name="Configuration properties" doc:id="ccf0b369-f8cd-430a-a6e0-c2016ff8dd1a" file="config.yaml" />
-	<http:request-config name="http-request-configuration" doc:name="HTTP Request configuration" doc:id="91c93af5-0973-4ca1-8766-d8aaf1675739" >
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="48be0296-195a-4120-b3db-246fbbaaefef" file="properties/${env}.yaml" />
+	<global-property doc:name="Global Property" doc:id="a5579de0-c8af-410d-9859-24f00a0280b9" name="env" value="local" />
+	<http:request-config name="http_request_configuration" doc:name="HTTP Request configuration" doc:id="6065f7d4-db4c-47ae-9506-126b73e40cd2" >
 		<http:request-connection host="${sitecore.host}" />
 	</http:request-config>
-	<http:listener-config name="sitecore-assets-sapi-http-listener-config" doc:name="sitecore-assets-sapi-http-listener-config" doc:id="b30608f2-1d9a-43a9-9a93-a57f8cb7959e" >
-		<http:listener-connection host="${http.host}" port="${http.port}" protocol="HTTPS">
-			<tls:context >
-				<tls:key-store type="pkcs12" path="certificates/sitecore-server-keystore.jks" keyPassword="sitecore" password="sitecore"/>
-			</tls:context>
-		</http:listener-connection>
+	<http:listener-config name="sitecore-assets-sapi-http-listener-config" doc:name="HTTP Listener config" doc:id="95b292b2-83aa-410e-a4ed-787bbbac9d1c" >
+		<http:listener-connection host="${http.host}" port="${http.port}" />
 	</http:listener-config>
-	<apikit:config outboundHeadersMapName="outboundHeadersMapName" httpStatusVarName="httpStatus" doc:name="Router" doc:id="566a70b1-8260-4ec1-978d-f63c03dc0f73" name="sitecore-assets-sapi-config" api="resource::5c4f07af-8f57-4104-a9ae-2779234b4592:sitecore-assets-sapi:1.0.4:raml:zip:sitecore-assets-sapi.raml"/>
-	<configuration-properties doc:name="Configuration properties" doc:id="12f736e9-6484-4ef5-98c2-4acc2b07bb84" file="properties/${env}.yaml" />
-	<global-property doc:name="Global Property" doc:id="8785bb23-9d3e-4780-b94d-85f48fad8a79" name="env" value="local" />
 </mule>

@@ -27,8 +27,10 @@ sitecoresapi:
   port: "8082"
   baseUrl: "/api"
   protocol: "HTTP"   
+  getAllAsset: "/assets"
   getAssetPath: "/assets/575365"
   updateAssetPath: "/assets/575365/updateUrl"
+  x-auth-token: "qwerty123"
   
 s3:
   accesskey: "![qcqrQkmwU5K3LStVupunpvZfYLj+JrGK]"

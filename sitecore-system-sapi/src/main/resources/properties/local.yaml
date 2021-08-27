@@ -9,9 +9,9 @@ sitecore:
    methodPost: "POST"
    methodUpdate: "PUT"
 application:
-  name: "SiteCore System PAPI"  
+  name: "SiteCore System SAPI"  
   version: "1.0" 
-  instanceName: "papi" 
+  instanceName: "sapi" 
   env: "local"
   status: "active" 
      
